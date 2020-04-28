@@ -69,8 +69,8 @@ const validationSchema = yup.object().shape({
 });
 
 class Welcome extends React.Component {
-  constructor({ props }) {
-    super({ props });
+  constructor() {
+    super();
     this.state = {
       showForm: false,
       signInForm: false,
@@ -88,7 +88,7 @@ class Welcome extends React.Component {
   render() {
     return (
       <View style={styles.welcomeView}>
-        <StatusBar barStyle="light-content" />
+        <StatusBar barStyle="dark-content" />
         {/* BLOW FISH */}
         {/* <LottieView
           style={styles.annoyedFish}
