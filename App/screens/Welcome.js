@@ -88,7 +88,7 @@ class Welcome extends React.Component {
   render() {
     return (
       <View style={styles.welcomeView}>
-        <StatusBar barStyle="dark-content" />
+        <StatusBar barStyle="light-content" />
         {/* BLOW FISH */}
         {/* <LottieView
           style={styles.annoyedFish}
@@ -235,7 +235,7 @@ class Welcome extends React.Component {
                                 color="#ddd"
                                 title="Enter"
                                 onPress={() =>
-                                  this.props.navigation.push("LevelOne")
+                                  this.props.navigation.push("CharacterSelect")
                                 }
                               />
                             </View>
@@ -243,7 +243,7 @@ class Welcome extends React.Component {
                               color="#ddd"
                               title=">>"
                               onPress={() =>
-                                this.props.navigation.push("LevelOne")
+                                this.props.navigation.push("CharacterSelect")
                               }
                             />
                           </View>
@@ -258,7 +258,7 @@ class Welcome extends React.Component {
         </SafeAreaView>
         <LottieView
           style={styles.bubbles}
-          source={require("../assets/img/bubbles.json")}
+          source={require("../assets/img/animations/bubbles.json")}
           autoPlay
           loop
           resizeMode="contain"

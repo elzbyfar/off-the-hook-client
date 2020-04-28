@@ -2,6 +2,7 @@ import Matter from "matter-js";
 import Constants from "./Constants";
 import Line from "../components/Hook";
 import Hook from "../components/Hook";
+import Food from "../components/Food";
 import Treasure from "../components/Treasure";
 
 let tick = 0;
