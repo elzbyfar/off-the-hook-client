@@ -29,8 +29,7 @@ export default class Crab extends Component {
           left: x,
           width: width,
           height: height,
-          tintColor: "#61111c",
-          opacity: 0.8,
+          opacity: 0.7,
         }}
         resizeMode="contain"
         source={image}

@@ -14,10 +14,10 @@ Constants = {
   crabWidth: 110,
   crabHeight: 92,
 
-  fishWidth: 75,
-  fishHeight: 47,
+  fishWidth: 85,
+  fishHeight: 45,
 
-  foodRadius: 40,
+  foodRadius: 20,
 };
 
 export default Constants;

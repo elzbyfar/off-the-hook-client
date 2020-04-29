@@ -33,6 +33,7 @@ export default class Floor extends Component {
                 shadowColor: "#eee",
                 shadowOffset: { height: 10 },
                 shadowRadius: 100,
+                opacity: 0.85,
               }}
               key={index}
               resizeMode="stretch"

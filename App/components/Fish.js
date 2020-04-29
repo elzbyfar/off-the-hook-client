@@ -33,9 +33,10 @@ export default class Fish extends Component {
           width: width,
           height: height,
           zIndex: 100,
+          opacity: 0.85,
           transform: [{ rotate: rotation }],
         }}
-        resizeMode="contain"
+        resizeMode="stretch"
         source={image}
       ></Animated.Image>
     );

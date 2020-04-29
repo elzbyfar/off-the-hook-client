@@ -20,7 +20,7 @@ export default class Hook extends Component {
           tintColor: "#222",
         }}
         resizeMode="contain"
-        source={Images.lineHook}
+        source={Images.hook}
       ></Animated.Image>
     );
   }

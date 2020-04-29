@@ -105,7 +105,7 @@ class LevelOne extends Component {
     //GENERATE ENTITIES FOR USE
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
-    world.gravity.y = 0.4;
+    world.gravity.y = 0.2;
 
     let fish = Matter.Bodies.rectangle(
       Constants.maxWidth / 4,
@@ -145,19 +145,19 @@ class LevelOne extends Component {
 
     let food1 = Matter.Bodies.circle(
       (Constants.maxWidth * 3) / 2 - Math.floor(Math.random() * 300),
-      Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+      Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
       Constants.foodRadius,
       { isStatic: true }
     );
     let food2 = Matter.Bodies.circle(
       (Constants.maxWidth * 5) / 2 - Math.floor(Math.random() * 300),
-      Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+      Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
       Constants.foodRadius,
       { isStatic: true }
     );
     let food3 = Matter.Bodies.circle(
       (Constants.maxWidth * 7) / 2 - Math.floor(Math.random() * 300),
-      Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+      Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
       Constants.foodRadius,
       { isStatic: true }
     );
@@ -225,14 +225,17 @@ class LevelOne extends Component {
       },
       food1: {
         body: food1,
+        pick: 1,
         renderer: Food,
       },
       food2: {
         body: food2,
+        pick: 1,
         renderer: Food,
       },
       food3: {
         body: food3,
+        pick: 1,
         renderer: Food,
       },
     };

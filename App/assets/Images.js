@@ -10,10 +10,9 @@ export default Images = {
   tenacious02: require("./img/tenacious03.png"),
   tenacious03: require("./img/tenacious04.png"),
   tenacious04: require("./img/tenacious01.png"),
-  lineHook: require("./img/long-hook.png"),
+  hook: require("./img/long-hook.png"),
   treasure: require("./img/treasure02.png"),
-  pinkFood: require("./img/pink-food.png"),
-  orangeFood: require("./img/sphere.png"),
+  food: require("./img/sphere.png"),
   crab1: require("./img/crab01.png"),
   crab2: require("./img/crab02.png"),
   crab3: require("./img/crab03.png"),
@@ -22,4 +21,5 @@ export default Images = {
   crab6: require("./img/crab06.png"),
   crab7: require("./img/crab07.png"),
   crab8: require("./img/crab08.png"),
+  meatball: require("./img/meatball.png"),
 };
