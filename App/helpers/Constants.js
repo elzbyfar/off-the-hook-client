@@ -8,11 +8,13 @@ Constants = {
   floorWidth: 512,
   floorHeight: 200,
 
-  hookWidth: 103,
-  hookHeight: 1080,
+  hookWidth: 76,
+  hookHeight: 800,
 
   fishWidth: 75,
   fishHeight: 47,
+
+  foodRadius: 40,
 };
 
 export default Constants;

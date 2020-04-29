@@ -59,7 +59,7 @@ export default ({ navigation }) => (
     <View style={styles.boxes}>
       <TouchableOpacity
         style={styles.characterBox}
-        onPress={() => navigation.push("LevelOne")}
+        onPress={() => navigation.push("Map")}
         activeOpacity={0.6}
       >
         <Image

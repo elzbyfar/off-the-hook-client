@@ -1,7 +1,8 @@
 export default Images = {
   logo: require("./img/off-the-hook.png"),
-  // sandFloor: require("./img/flat-sand.png"),
-  sandFloor: require("./img/smaller-sand.png"),
+  map: require("./img/hooks-map-vertical.png"),
+  sandFloor: require("./img/flat-sand.png"),
+  // sandFloor: require("./img/smaller-sand.png"),
   fugacious01: require("./img/fugacious01.png"),
   ignatius01: require("./img/ignatius01.png"),
   loquacious01: require("./img/loquacious01.png"),
@@ -12,4 +13,6 @@ export default Images = {
   lineHook: require("./img/long-hook.png"),
   // hook: require("./img/hook01.png"),
   treasure: require("./img/treasure02.png"),
+  pinkFood: require("./img/pink-food.png"),
+  orangeFood: require("./img/sphere.png"),
 };

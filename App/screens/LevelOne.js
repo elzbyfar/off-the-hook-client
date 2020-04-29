@@ -7,7 +7,6 @@ import Constants from "../helpers/Constants";
 import Fish from "../components/Fish";
 import Floor from "../components/Floor";
 import Hook from "../components/Hook";
-import Treasure from "../components/Treasure";
 import Food from "../components/Food";
 // import Images from "../assets/Images";
 // import LottieView from "lottie-react-native";
@@ -50,6 +49,38 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 48,
   },
+  congratulationsText: {
+    color: "white",
+    fontSize: 24,
+  },
+  nextLevelButton: {
+    marginTop: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#fff",
+    backgroundColor: "#22a1e6",
+    color: "#eee",
+    height: 35,
+    width: 200,
+    borderRadius: 35,
+  },
+  nextLevelButtonText: {
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#eee",
+    fontSize: 20,
+  },
+  scoreContainer: {
+    // position: "relative",
+    marginTop: Constants.maxHeight - 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  score: {
+    fontSize: 20,
+    color: "#fff",
+  },
 });
 
 class LevelOne extends Component {
@@ -57,17 +88,24 @@ class LevelOne extends Component {
     super(props);
     this.state = {
       running: true,
-      hookHeight: 100,
+      score: 0,
     };
     this.gameEngine = null;
     this.entities = this.setupWorld();
   }
+  nextLevel = () => {
+    if (this.state.score >= 40) {
+      this.setState({
+        running: false,
+      });
+    }
+  };
 
   setupWorld = () => {
     //GENERATE ENTITIES FOR USE
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
-    world.gravity.y = 0.2;
+    world.gravity.y = 0.0;
 
     let fish = Matter.Bodies.rectangle(
       Constants.maxWidth / 4,
@@ -77,30 +115,26 @@ class LevelOne extends Component {
     );
     let floor1 = Matter.Bodies.rectangle(
       Constants.floorWidth / 2,
-      Constants.maxHeight - 50,
+      Constants.maxHeight - 60,
       Constants.floorWidth,
       Constants.floorHeight,
       { isStatic: true }
     );
     let floor2 = Matter.Bodies.rectangle(
       Constants.floorWidth + Constants.floorWidth / 2,
-      Constants.maxHeight - 50,
+      Constants.maxHeight - 60,
       Constants.floorWidth,
       Constants.floorHeight,
       { isStatic: true }
     );
 
     let hook1 = Matter.Bodies.rectangle(
-      Constants.maxWidth * 2 - Constants.hookWidth / 2,
-      Constants.maxHeight / 8,
+      Constants.maxWidth * 4 - Constants.hookWidth / 2,
+      Constants.maxHeight / 3,
       Constants.hookWidth,
       Constants.hookHeight,
       { isStatic: true }
     );
-    let food = Matter.Bodies.rectangle(400, 150, 50, 50, {
-      backgroundColor: "red",
-      isStatic: true,
-    });
 
     // let hook2 = Matter.Bodies.rectangle(
     //   Constants.maxWidth * 3 - Constants.hookWidth / 2,
@@ -110,18 +144,28 @@ class LevelOne extends Component {
     //   { isStatic: true }
     // );
 
-    // let treasure1 = Matter.Bodies.rectangle(
-    //   Constants.maxWidth - Constants.hookWidth / 2 - 100,
-    //   Constants.maxHeight - 250,
-    //   1,
-    //   1,
-    //   { isStatic: true }
-    // );
-    // let treasure2 = Matter.Bodies.rectangle(
-    //   Constants.maxWidth * 2 - Constants.hookWidth / 2 - 100,
-    //   Constants.maxHeight - 250,
-    //   1,
-    //   1,
+    let food1 = Matter.Bodies.circle(
+      (Constants.maxWidth * 3) / 2 - Math.floor(Math.random() * 300),
+      Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+      Constants.foodRadius,
+      { isStatic: true }
+    );
+    let food2 = Matter.Bodies.circle(
+      (Constants.maxWidth * 5) / 2 - Math.floor(Math.random() * 300),
+      Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+      Constants.foodRadius,
+      { isStatic: true }
+    );
+    let food3 = Matter.Bodies.circle(
+      (Constants.maxWidth * 7) / 2 - Math.floor(Math.random() * 300),
+      Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+      Constants.foodRadius,
+      { isStatic: true }
+    );
+    // let food4 = Matter.Bodies.circle(
+    //   (Constants.maxWidth * 8) / 2 - Math.floor(Math.random() * 300),
+    //   Constants.maxHeight - (200 + Math.floor(Math.random() * 400)),
+    //   Constants.foodRadius,
     //   { isStatic: true }
     // );
 
@@ -131,20 +175,47 @@ class LevelOne extends Component {
       floor1,
       floor2,
       hook1,
-      food,
-      // hook2,
-
-      // treasure1,
-      // treasure2,
+      food1,
+      food2,
+      food3,
+      // food4,
     ]);
 
     //COLLISION DETECTION
     Matter.Events.on(engine, "collisionStart", (event) => {
+      // console.log(Matter.Detector.canCollide(floor2, fish));
       //PAIRS INVOLVED IN COLLISION
       let pairs = event.pairs;
+      // pairs.forEach((pair) => {
+      //   if (pair.bodyA.label === "Circle Body") {
+      //     Matter.World.remove(event.world, pair.bodyA);
+      //     Matter.World.add(engine.world, [pair.bodyA]);
+      //   } else if (pair.bodyB.label === "Circle Body") {
+      //     Matter.World.remove(engine.world, pair.bodyB);
+      //     Matter.World.add(engine.world, [pair.bodyB]);
+      //   }
+      // });
+
+      if (pairs[0].bodyB.label === "Circle Body") {
+        pairs[0].isActive = false;
+        this.setState((state) => ({
+          score: state.score + 1,
+        }));
+      }
+      if (pairs[0].bodyA.label === "Circle Body") {
+        pairs[0].isActive = false;
+        this.setState((state) => ({
+          score: state.score + 1,
+        }));
+      }
+      if (this.state.score >= 40) {
+        this.gameEngine.dispatch({ type: "next-level" });
+      }
+      if (pairs[0].bodyB.label === "Rectangle Body") {
+        this.gameEngine.dispatch({ type: "game-over" });
+      }
 
       //EVENT DISPATCHED TO ALL LISTENERS
-      this.gameEngine.dispatch({ type: "game-over" });
     });
 
     //RETURN ENTITIES TO RENDER ON SCREEN
@@ -163,23 +234,25 @@ class LevelOne extends Component {
         body: hook1,
         renderer: Hook,
       },
-      food: {
-        body: food,
-        size: [140, 140],
-        color: "red",
-        render: Food,
-      },
       // hook2: {
       //   body: hook2,
       //   renderer: Hook,
       // },
-      // treasure1: {
-      //   body: treasure1,
-      //   renderer: Treasure,
-      // },
-      // treasure2: {
-      //   body: treasure2,
-      //   renderer: Treasure,
+      food1: {
+        body: food1,
+        renderer: Food,
+      },
+      food2: {
+        body: food2,
+        renderer: Food,
+      },
+      food3: {
+        body: food3,
+        renderer: Food,
+      },
+      // food4: {
+      //   body: food4,
+      //   renderer: Food,
       // },
     };
   };
@@ -190,11 +263,17 @@ class LevelOne extends Component {
         running: false,
       });
     }
+    if (event.type === "next-level") {
+      this.setState({
+        running: false,
+      });
+    }
   };
 
   reset = () => {
     this.gameEngine.swap(this.setupWorld());
     this.setState({
+      score: 0,
       running: true,
     });
   };
@@ -212,16 +291,35 @@ class LevelOne extends Component {
           onEvent={this.onEvent}
           entities={this.entities}
         />
-        {!this.state.running && (
-          <TouchableOpacity
-            onPress={this.reset}
-            style={styles.fullScreenButton}
-          >
+        {!this.state.running && this.state.score < 40 && (
+          <TouchableOpacity onPress={() => {}} style={styles.fullScreenButton}>
             <View style={styles.fullScreen}>
-              <Text style={styles.gameOverText}>GAME OVER</Text>
+              <Text style={styles.gameOverText}>Ouch!</Text>
+              <TouchableOpacity
+                onPress={this.reset}
+                style={styles.nextLevelButton}
+              >
+                <Text style={styles.nextLevelButtonText}>Play Again</Text>
+              </TouchableOpacity>
             </View>
           </TouchableOpacity>
         )}
+        {!this.state.running && this.state.score >= 40 && (
+          <TouchableOpacity onPress={() => {}} style={styles.fullScreenButton}>
+            <View style={styles.fullScreen}>
+              <Text style={styles.congratulationsText}>CONGRATULATIONS!</Text>
+              <TouchableOpacity
+                onPress={() => alert("Under Construction")}
+                style={styles.nextLevelButton}
+              >
+                <Text style={styles.nextLevelButtonText}>NEXT LEVEL</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        )}
+        <View style={styles.scoreContainer}>
+          <Text style={styles.score}>Score: {this.state.score}</Text>
+        </View>
       </View>
     );
   }

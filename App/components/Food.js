@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { View, Image, Animated } from "react-native";
 import Images from "../assets/Images";
+import Constants from "../helpers/Constants";
 
-export default class Food extends Component {
+export default class Treasure extends Component {
   constructor(props) {
     super(props);
 
@@ -25,16 +26,18 @@ export default class Food extends Component {
     // let image = Images["nemo0" + this.props.pose];
 
     return (
-      <View
+      <Image
         style={{
           position: "absolute",
           top: y,
           left: x,
-          width: width,
-          height: height,
+          width: 20,
+          height: 20,
           // transform: [{ rotate: rotation }],
         }}
-      ></View>
+        // resizeMode="cover"
+        source={Images.orangeFood}
+      ></Image>
     );
   }
 }
