@@ -5,6 +5,7 @@ import Food from "../components/Food";
 
 let tick = 0;
 let pose = 1;
+let crabPose = 1;
 
 const Physics = (entities, { touches, time }) => {
   let engine = entities.physics.engine;
@@ -16,7 +17,7 @@ const Physics = (entities, { touches, time }) => {
     .filter((t) => t.type === "press")
     .forEach((t) => {
       if (!hadTouches) {
-        if (world.gravity.y === 0) {
+        if (world.gravity.y === 0.05) {
           world.gravity.y = 0.4;
         }
         hadTouches = true;
@@ -41,6 +42,16 @@ const Physics = (entities, { touches, time }) => {
     Matter.Body.translate(entities.hook1.body, { x: 0, y: -12 });
   }
 
+  //CRAB REGENERATION + VERTICAL MOVEMENT
+  if (entities.crab.body.position.x <= -100) {
+    Matter.Body.setPosition(entities.crab.body, {
+      x: Constants.maxWidth * 4 - Constants.crabWidth / 2,
+      y: Constants.maxHeight - 200,
+    });
+  } else {
+    Matter.Body.translate(entities.crab.body, { x: -4, y: 0 });
+  }
+
   //FOOD
 
   for (let i = 1; i <= 3; i++) {
@@ -52,7 +63,7 @@ const Physics = (entities, { touches, time }) => {
         y: Constants.maxHeight - (350 + i * Math.floor(Math.random() * 100)),
       });
     } else {
-      Matter.Body.translate(entities["food" + i].body, { x: -4, y: 0.35 });
+      Matter.Body.translate(entities["food" + i].body, { x: -4, y: 0.4 });
     }
   }
 
@@ -74,15 +85,6 @@ const Physics = (entities, { touches, time }) => {
       });
     }
   }
-
-  // if (entities.food1.body.position.x <= -200) {
-  //   Matter.Body.setPosition(entities.food1.body, {
-  //     x: Constants.maxWidth * 2 - Constants.hookWidth / 2,
-  //     y: Constants.maxHeight - 250,
-  //   });
-  // } else {
-  //   Matter.Body.translate(entities.food1.body, { x: -4, y: 0 });
-  // }
 
   Matter.Engine.update(engine, time.delta);
 
@@ -109,6 +111,16 @@ const Physics = (entities, { touches, time }) => {
     }
     entities.fish.pose = pose;
   }
+
+  //CRAB ANIMATION
+  if (tick % 15 === 0) {
+    crabPose = crabPose + 1;
+    if (crabPose > 8) {
+      crabPose = 1;
+    }
+    entities.crab.crabPose = crabPose;
+  }
+
   return entities;
 };
 

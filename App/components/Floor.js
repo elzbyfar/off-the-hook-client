@@ -27,7 +27,13 @@ export default class Floor extends Component {
         {Array.apply(null, Array(imageIterations)).map((element, index) => {
           return (
             <Image
-              style={{ width: 512, height: 200 }}
+              style={{
+                width: 512,
+                height: 200,
+                shadowColor: "#eee",
+                shadowOffset: { height: 10 },
+                shadowRadius: 100,
+              }}
               key={index}
               resizeMode="stretch"
               source={Images.sandFloor}

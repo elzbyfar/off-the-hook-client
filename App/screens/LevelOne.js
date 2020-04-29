@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { GameEngine } from "react-native-game-engine";
-import Matter from "matter-js";
-import Physics from "../helpers/Physics";
-import GenerateLines from "../helpers/GenerateLines";
 import Constants from "../helpers/Constants";
-import Fish from "../components/Fish";
+import Physics from "../helpers/Physics";
+import Matter from "matter-js";
 import Floor from "../components/Floor";
+import Fish from "../components/Fish";
 import Hook from "../components/Hook";
+import Crab from "../components/Crab";
 import Food from "../components/Food";
 // import Images from "../assets/Images";
 // import LottieView from "lottie-react-native";
 // import Ceiling from "../components/Ceiling";
+// import GenerateLines from "../helpers/GenerateLines";
 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -72,7 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   scoreContainer: {
-    // position: "relative",
     marginTop: Constants.maxHeight - 100,
     alignItems: "center",
     justifyContent: "center",
@@ -94,7 +94,7 @@ class LevelOne extends Component {
     this.entities = this.setupWorld();
   }
   nextLevel = () => {
-    if (this.state.score >= 40) {
+    if (this.state.score >= 100) {
       this.setState({
         running: false,
       });
@@ -105,7 +105,7 @@ class LevelOne extends Component {
     //GENERATE ENTITIES FOR USE
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
-    world.gravity.y = 0.0;
+    world.gravity.y = 0.4;
 
     let fish = Matter.Bodies.rectangle(
       Constants.maxWidth / 4,
@@ -135,14 +135,13 @@ class LevelOne extends Component {
       Constants.hookHeight,
       { isStatic: true }
     );
-
-    // let hook2 = Matter.Bodies.rectangle(
-    //   Constants.maxWidth * 3 - Constants.hookWidth / 2,
-    //   0,
-    //   Constants.hookWidth,
-    //   Constants.hookHeight,
-    //   { isStatic: true }
-    // );
+    let crab = Matter.Bodies.rectangle(
+      Constants.maxWidth * 2 - Constants.crabWidth / 2,
+      Constants.maxHeight - 200,
+      Constants.crabWidth,
+      Constants.crabHeight,
+      { isStatic: true }
+    );
 
     let food1 = Matter.Bodies.circle(
       (Constants.maxWidth * 3) / 2 - Math.floor(Math.random() * 300),
@@ -162,12 +161,6 @@ class LevelOne extends Component {
       Constants.foodRadius,
       { isStatic: true }
     );
-    // let food4 = Matter.Bodies.circle(
-    //   (Constants.maxWidth * 8) / 2 - Math.floor(Math.random() * 300),
-    //   Constants.maxHeight - (200 + Math.floor(Math.random() * 400)),
-    //   Constants.foodRadius,
-    //   { isStatic: true }
-    // );
 
     //PLACE ENTITIES WITHIN MATTER.WORLD'S SCOPE
     Matter.World.add(world, [
@@ -175,6 +168,7 @@ class LevelOne extends Component {
       floor1,
       floor2,
       hook1,
+      crab,
       food1,
       food2,
       food3,
@@ -183,18 +177,8 @@ class LevelOne extends Component {
 
     //COLLISION DETECTION
     Matter.Events.on(engine, "collisionStart", (event) => {
-      // console.log(Matter.Detector.canCollide(floor2, fish));
       //PAIRS INVOLVED IN COLLISION
       let pairs = event.pairs;
-      // pairs.forEach((pair) => {
-      //   if (pair.bodyA.label === "Circle Body") {
-      //     Matter.World.remove(event.world, pair.bodyA);
-      //     Matter.World.add(engine.world, [pair.bodyA]);
-      //   } else if (pair.bodyB.label === "Circle Body") {
-      //     Matter.World.remove(engine.world, pair.bodyB);
-      //     Matter.World.add(engine.world, [pair.bodyB]);
-      //   }
-      // });
 
       if (pairs[0].bodyB.label === "Circle Body") {
         pairs[0].isActive = false;
@@ -208,14 +192,14 @@ class LevelOne extends Component {
           score: state.score + 1,
         }));
       }
-      if (this.state.score >= 40) {
+
+      //EVENTS DISPATCHED TO ALL LISTENERS
+      if (this.state.score >= 100) {
         this.gameEngine.dispatch({ type: "next-level" });
       }
       if (pairs[0].bodyB.label === "Rectangle Body") {
         this.gameEngine.dispatch({ type: "game-over" });
       }
-
-      //EVENT DISPATCHED TO ALL LISTENERS
     });
 
     //RETURN ENTITIES TO RENDER ON SCREEN
@@ -234,10 +218,11 @@ class LevelOne extends Component {
         body: hook1,
         renderer: Hook,
       },
-      // hook2: {
-      //   body: hook2,
-      //   renderer: Hook,
-      // },
+      crab: {
+        body: crab,
+        pose: 1,
+        renderer: Crab,
+      },
       food1: {
         body: food1,
         renderer: Food,
@@ -250,10 +235,6 @@ class LevelOne extends Component {
         body: food3,
         renderer: Food,
       },
-      // food4: {
-      //   body: food4,
-      //   renderer: Food,
-      // },
     };
   };
 
@@ -292,10 +273,15 @@ class LevelOne extends Component {
           entities={this.entities}
         />
         {!this.state.running && this.state.score < 40 && (
-          <TouchableOpacity onPress={() => {}} style={styles.fullScreenButton}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {}}
+            style={styles.fullScreenButton}
+          >
             <View style={styles.fullScreen}>
               <Text style={styles.gameOverText}>Ouch!</Text>
               <TouchableOpacity
+                activeOpacity={0.9}
                 onPress={this.reset}
                 style={styles.nextLevelButton}
               >
@@ -304,11 +290,16 @@ class LevelOne extends Component {
             </View>
           </TouchableOpacity>
         )}
-        {!this.state.running && this.state.score >= 40 && (
-          <TouchableOpacity onPress={() => {}} style={styles.fullScreenButton}>
+        {!this.state.running && this.state.score >= 100 && (
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {}}
+            style={styles.fullScreenButton}
+          >
             <View style={styles.fullScreen}>
               <Text style={styles.congratulationsText}>CONGRATULATIONS!</Text>
               <TouchableOpacity
+                activeOpacity={0.9}
                 onPress={() => alert("Under Construction")}
                 style={styles.nextLevelButton}
               >

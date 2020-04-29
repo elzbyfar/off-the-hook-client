@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     zIndex: -100,
   },
   textBox: {
-    marginTop: 5,
-    height: 240,
+    marginTop: 30,
+    height: 250,
     flexDirection: "column",
     justifyContent: "space-between",
   },
@@ -43,11 +43,13 @@ const styles = StyleSheet.create({
   },
   startButton: {
     borderWidth: 2,
+    width: 150,
     height: 40,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#40200f",
     borderRadius: 35,
+    marginTop: 10,
   },
   start: {
     color: "#f0c97d",
@@ -90,13 +92,24 @@ const Map = ({ navigation }) => {
             />
             <View style={styles.textBox}>
               <Text style={styles.heading}>Trace Your Quest</Text>
-              <TouchableOpacity
-                onPress={() => navigation.push("LevelOne")}
-                activeOpacity={0.6}
-                style={styles.startButton}
-              >
-                <Text style={styles.start}>START</Text>
-              </TouchableOpacity>
+
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <View style={{ flexDirection: "row" }}>
+                  <Text>Level One: </Text>
+                  <Text style={{ fontWeight: "700" }}>La Palma</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Text>Objective: </Text>
+                  <Text style={{ fontWeight: "700" }}>40 Points</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => navigation.push("LevelOne")}
+                  activeOpacity={0.6}
+                  style={styles.startButton}
+                >
+                  <Text style={styles.start}>START</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </Animated.View>
         </PinchGestureHandler>

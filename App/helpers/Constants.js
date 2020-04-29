@@ -11,6 +11,9 @@ Constants = {
   hookWidth: 76,
   hookHeight: 800,
 
+  crabWidth: 110,
+  crabHeight: 92,
+
   fishWidth: 75,
   fishHeight: 47,
 
