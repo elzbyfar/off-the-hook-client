@@ -5,8 +5,10 @@ import Food from "../components/Food";
 
 let tick = 0;
 let pose = 1;
+let colorPick = 0;
 let crabPose = 1;
-let pick = 0;
+let purpleSharkPose = 1;
+let meatballPose = 1;
 
 const Physics = (entities, { touches, time }) => {
   let engine = entities.physics.engine;
@@ -19,7 +21,7 @@ const Physics = (entities, { touches, time }) => {
     .forEach((t) => {
       if (!hadTouches) {
         if (world.gravity.y === 0.2) {
-          world.gravity.y = 0.35;
+          world.gravity.y = 0.28;
         }
         hadTouches = true;
         Matter.Body.setVelocity(fish, {
@@ -53,6 +55,29 @@ const Physics = (entities, { touches, time }) => {
     Matter.Body.translate(entities.crab.body, { x: -4, y: 0 });
   }
 
+  //PURPLESHARK REGENERATION
+  if (entities.purpleShark.body.position.x <= -100) {
+    Matter.Body.setPosition(entities.purpleShark.body, {
+      x: Constants.maxWidth * 4 - Constants.purpleSharkWidth / 2,
+      y: Constants.maxHeight - 600,
+    });
+  } else {
+    Matter.Body.translate(entities.purpleShark.body, { x: -5, y: 0.5 });
+  }
+
+  //MEATBALL REGENERATION
+  // if (entities.meatball.body.position.x <= -100) {
+  //   Matter.Body.setPosition(entities.meatball.body, {
+  //     x: Constants.maxWidth * 4 - Constants.meatballWidth / 2,
+  //     y:
+  //       Constants.maxHeight -
+  //       Math.floor(Math.random() * 300) -
+  //       Math.floor(Math.random() * 300),
+  //   });
+  // } else {
+  //   Matter.Body.translate(entities.meatball.body, { x: -3.8, y: -0.55 });
+  // }
+
   //FOOD
   let n = null;
   for (let i = 1; i <= 90; i++) {
@@ -72,7 +97,7 @@ const Physics = (entities, { touches, time }) => {
         y: Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
       });
     } else {
-      Matter.Body.translate(entities["food" + n].body, { x: -0.08, y: 0.01 });
+      Matter.Body.translate(entities["food" + n].body, { x: -0.08, y: 0.03 });
     }
   }
 
@@ -109,6 +134,21 @@ const Physics = (entities, { touches, time }) => {
     }
   });
 
+  //BACKGROUND MOVEMENT
+  Object.keys(entities).forEach((key) => {
+    if (key.indexOf("backgroundImage") === 0) {
+      if (entities[key].body.position.x <= (-1 * 985) / 2) {
+        Matter.Body.setPosition(entities[key].body, {
+          x:
+            Constants.backgroundImageWidth + Constants.backgroundImageWidth / 2,
+          y: entities[key].body.position.y,
+        });
+      } else {
+        Matter.Body.translate(entities[key].body, { x: -0.4, y: 0 });
+      }
+    }
+  });
+
   //FINS ANIMATION
   tick += 1;
   if (tick % 5 === 0) {
@@ -120,15 +160,24 @@ const Physics = (entities, { touches, time }) => {
   }
 
   //COLOR CHANGE
-  if (tick % 10 === 0) {
+  if (tick % 7 === 0) {
     for (let i = 1; i <= 3; i++) {
-      entities["food" + i].pick = pick;
+      entities["food" + i].colorPick = colorPick;
     }
-    pick += 1;
-    if (pick === 4) {
-      pick = 0;
+    colorPick += 1;
+    if (colorPick === 4) {
+      colorPick = 0;
     }
   }
+
+  //MEATBALL ROTATE
+  // if (tick % 10 === 0) {
+  //   meatballPose = meatballPose + 1;
+  //   if (meatballPose > 23) {
+  //     meatballPose = 1;
+  //   }
+  //   entities.meatball.meatballPose = meatballPose;
+  // }
 
   //CRAB ANIMATION
   if (tick % 15 === 0) {
@@ -137,6 +186,15 @@ const Physics = (entities, { touches, time }) => {
       crabPose = 1;
     }
     entities.crab.crabPose = crabPose;
+  }
+
+  //PURPLESHARK ANIMATION
+  if (tick % 5 === 0) {
+    purpleSharkPose = purpleSharkPose + 1;
+    if (purpleSharkPose > 3) {
+      purpleSharkPose = 1;
+    }
+    entities.purpleShark.purpleSharkPose = purpleSharkPose;
   }
 
   return entities;

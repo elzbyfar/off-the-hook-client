@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { View, Image, Animated } from "react-native";
 import Images from "../assets/Images";
 
-export default class Fish extends Component {
+export default class PurpleShark extends Component {
   constructor(props) {
     super(props);
 
-    this.animatedValue = new Animated.Value(this.props.body.velocity.y);
+    this.animatedValue = new Animated.Value(this.props.body.velocity.x);
   }
   render() {
     const width = this.props.body.bounds.max.x - this.props.body.bounds.min.x;
@@ -14,15 +14,12 @@ export default class Fish extends Component {
     const x = this.props.body.position.x - width / 2;
     const y = this.props.body.position.y - height / 2;
 
-    //FISH ROTATION
-    this.animatedValue.setValue(this.props.body.velocity.y);
-    let rotation = this.animatedValue.interpolate({
-      inputRange: [-10, 0, 10, 20],
-      outputRange: ["-40deg", "0deg", "25deg", "55deg"],
-      extrapolate: "clamp",
-    });
+    // this.animatedValue.setValue(this.props.body.velocity.x);
+    // let rotation = this.animatedValue.interpolate({
 
-    let image = Images["tenacious0" + this.props.pose];
+    // })
+
+    let image = Images["purpleShark" + this.props.purpleSharkPose];
 
     return (
       <Animated.Image
@@ -32,9 +29,8 @@ export default class Fish extends Component {
           left: x,
           width: width,
           height: height,
-          zIndex: 100,
-          opacity: 0.85,
-          transform: [{ rotate: rotation }],
+          opacity: 0.9,
+          zIndex: 10,
         }}
         resizeMode="contain"
         source={image}

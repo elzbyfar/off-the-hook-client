@@ -13,7 +13,7 @@ export default class Treasure extends Component {
     const x = this.props.body.position.x - width / 2;
     const y = this.props.body.position.y - height / 2;
 
-    let colors = ["#db835a", "#db794b", "#d9642e", "#db794b"];
+    let colors = ["#e38c64", "#db794b", "#d9642e", "#db794b"];
 
     return (
       <Image
@@ -21,11 +21,12 @@ export default class Treasure extends Component {
           position: "absolute",
           top: y,
           left: x,
-          width: 25,
-          height: 25,
+          width: 32,
+          height: 32,
           zIndex: -10,
-          tintColor: colors[this.props.pick],
+          tintColor: colors[this.props.colorPick],
         }}
+        resizeMode="contain"
         source={Images.food}
       ></Image>
     );
