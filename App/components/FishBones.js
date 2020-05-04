@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Image, Animated } from "react-native";
 import Images from "../assets/Images";
 
-export default class PurpleShark extends Component {
+export default class FishBones extends Component {
   constructor(props) {
     super(props);
 
@@ -19,7 +19,7 @@ export default class PurpleShark extends Component {
 
     // })
 
-    let image = Images["purpleShark" + this.props.purpleSharkPose];
+    // let image = Images["purpleShark" + this.props.purpleSharkPose];
 
     return (
       <Animated.Image
@@ -27,13 +27,13 @@ export default class PurpleShark extends Component {
           position: "absolute",
           top: y,
           left: x,
-          width: 188,
-          height: 152,
+          width: 160,
+          height: 80,
           // opacity: 0.3,
           zIndex: 10,
         }}
         resizeMode="stretch"
-        source={image}
+        source={Images.fishBones}
       ></Animated.Image>
     );
   }

@@ -30,7 +30,7 @@ export default class Floor extends Component {
               style={{
                 width: 512,
                 height: 200,
-                opacity: 0.3,
+                opacity: 0.5,
               }}
               key={index}
               resizeMode="stretch"

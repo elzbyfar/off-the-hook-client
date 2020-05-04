@@ -1,8 +1,8 @@
 import { Dimensions } from "react-native";
 
 Constants = {
-  maxWidth: Dimensions.get("screen").width,
-  maxHeight: Dimensions.get("screen").height,
+  maxWidth: Dimensions.get("window").width,
+  maxHeight: Dimensions.get("window").height,
   gapSize: 300,
 
   floorWidth: 512,
@@ -11,14 +11,21 @@ Constants = {
   backgroundImageWidth: 1000,
   backgroundImageHeight: 657,
 
-  hookWidth: 76,
-  hookHeight: 800,
+  hookWidth: 103,
+  hookHeight: 400,
+  hookRadius: 200,
 
-  crabWidth: 110,
-  crabHeight: 92,
+  crabWidth: 104,
+  crabHeight: 78,
+  crabRadius: 35,
 
   purpleSharkWidth: 187,
   purpleSharkHeight: 152,
+  purpleSharkRadius: 67,
+
+  fishBonesWidth: 160,
+  fishBonesHeight: 80,
+  fishBonesRadius: 45,
 
   meatballWidth: 130,
   meatballHeight: 120,

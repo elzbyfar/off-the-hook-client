@@ -15,9 +15,10 @@ export default class Hook extends Component {
           position: "absolute",
           top: y,
           left: x,
-          width: width,
-          height: height,
-          tintColor: "#222",
+          width: 103,
+          height: 400,
+          opacity: 0.6,
+          // tintColor: "#",
         }}
         resizeMode="contain"
         source={Images.hook}

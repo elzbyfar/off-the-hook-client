@@ -22,7 +22,7 @@ export default class Fish extends Component {
       extrapolate: "clamp",
     });
 
-    let image = Images["tenacious0" + this.props.pose];
+    let image = Images["nemo0" + this.props.pose];
 
     return (
       <Animated.Image

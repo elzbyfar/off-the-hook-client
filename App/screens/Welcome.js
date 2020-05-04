@@ -1,5 +1,6 @@
 import React from "react";
 import Images from "../assets/Images";
+import styles from "../styles/WelcomeStyles.js";
 import LottieView from "lottie-react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -21,46 +22,8 @@ import {
 
 const screen = Dimensions.get("window");
 
-const styles = StyleSheet.create({
-  welcomeView: {
-    flex: 1,
-    backgroundColor: "#22a1e6",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bubbles: {
-    position: "absolute",
-    width: 1000,
-    zIndex: -1,
-  },
-  annoyedFish: {
-    width: 240,
-    marginTop: -150,
-    position: "absolute",
-  },
-  safeArea: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonView: {
-    alignItems: "center",
-    backgroundColor: "rgba(250, 253, 255, 0.4)",
-    borderColor: "rgba(250, 253, 255, 0.4)",
-    paddingVertical: 10,
-    width: 200,
-    marginBottom: 5,
-    borderRadius: 35,
-    opacity: 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "rgb(42, 72, 107)",
-  },
-});
-
 const validationSchema = yup.object().shape({
-  username: yup.string().label("Username").required(),
+  name: yup.string().label("name").required(),
   password: yup
     .string()
     .label("Password")
@@ -69,19 +32,22 @@ const validationSchema = yup.object().shape({
 });
 
 class Welcome extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       showForm: false,
-      signInForm: false,
-      createAccountForm: false,
+      formType: "",
+      user: {
+        id: "",
+        name: "",
+      },
     };
   }
 
-  showForm = (formType) => {
+  showForm = (type) => {
     this.setState((state) => ({
       showForm: !state.showForm,
-      // [formType]: !state[formType],
+      formType: type,
     }));
   };
 
@@ -92,7 +58,7 @@ class Welcome extends React.Component {
         {/* BLOW FISH */}
         {/* <LottieView
           style={styles.annoyedFish}
-          source={require("../assets/img/annoyed-fish.json")}
+          source={require("../assets/img/animations/annoyed-fish.json")}
           autoPlay
           loop
           resizeMode="cover"
@@ -115,7 +81,7 @@ class Welcome extends React.Component {
           {!this.state.showForm ? (
             <View>
               <TouchableOpacity
-                onPress={() => this.showForm()}
+                onPress={() => this.showForm("find")}
                 activeOpacity={0.8}
               >
                 <View style={styles.buttonView}>
@@ -123,7 +89,7 @@ class Welcome extends React.Component {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.showForm()}
+                onPress={() => this.showForm("create")}
                 activeOpacity={0.8}
               >
                 <View style={styles.buttonView}>
@@ -134,119 +100,127 @@ class Welcome extends React.Component {
           ) : (
             <View>
               <Formik
-                initialValues={{ username: "", password: "" }}
+                initialValues={{ name: "", password: "" }}
                 onSubmit={(values, actions) => {
-                  alert(JSON.stringify(values));
-                  setTimeout(() => {
-                    actions.setSubmitting(false);
-                  }, 1000);
+                  if (this.state.formType === "create") {
+                    fetch("http://localhost:3000/api/v1/users", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                      },
+                      body: JSON.stringify(values),
+                    })
+                      .then((resp) => resp.json())
+                      .then((user) => {
+                        this.setState({
+                          user: {
+                            id: user.id,
+                            name: user.name,
+                          },
+                        });
+                      })
+                      .then(() =>
+                        this.props.navigation.push("CharacterSelect", {
+                          user: this.state.user,
+                        })
+                      );
+                  } else if (this.state.formType === "find") {
+                    fetch("http://localhost:3000/api/v1/users", {
+                      method: "GET",
+                    })
+                      .then((resp) => resp.json())
+                      .then((users) => {
+                        let user = users.find((user) => {
+                          return user.name === values.name;
+                        });
+                        this.setState({
+                          user: {
+                            id: user.id,
+                            name: user.name,
+                          },
+                        });
+                      })
+                      .then(() =>
+                        this.props.navigation.push("CharacterSelect", {
+                          user: this.state.user,
+                        })
+                      );
+                  }
                 }}
                 validationSchema={validationSchema}
               >
                 {(formikProps) => (
                   <React.Fragment>
-                    <View style={{ marginBottom: 5, marginTop: -30 }}>
+                    <View style={styles.formContainer}>
                       <TextInput
-                        placeholder="enter your username"
+                        placeholder={
+                          this.state.formType === "find"
+                            ? "enter your name"
+                            : "create name"
+                        }
                         placeholderTextColor="#ddd"
-                        style={{
-                          backgroundColor: "#22a1e6",
-                          borderWidth: 1,
-                          borderRadius: 35,
-                          fontSize: 16,
-                          fontWeight: "500",
-                          width: 200,
-                          alignItems: "center",
-                          textAlign: "center",
-                          borderColor: "#555",
-                          paddingVertical: 12,
-                        }}
-                        onChangeText={formikProps.handleChange("username")}
+                        style={styles.formInput}
+                        onChangeText={formikProps.handleChange("name")}
                         autoFocus
                       />
                     </View>
-                    <View style={{}}>
+                    <View
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <TextInput
-                        placeholder="enter your password"
+                        placeholder={
+                          this.state.formType === "find"
+                            ? "enter your password"
+                            : "create password"
+                        }
                         placeholderTextColor="#ddd"
-                        style={{
-                          backgroundColor: "#22a1e6",
-                          borderWidth: 1,
-                          borderRadius: 35,
-                          fontSize: 16,
-                          fontWeight: "500",
-                          width: 200,
-                          textAlign: "center",
-                          borderColor: "#555",
-                          paddingVertical: 12,
-                        }}
+                        style={styles.formInput}
                         onChangeText={formikProps.handleChange("password")}
                         secureTextEntry
                       />
-                      {/* ERROR MESSAGES */}
-                      {/* <Text style={{ color: "red" }}>
-                        {formikProps.errors.username}
+                      <Text style={{ color: "#a31717", marginTop: 2 }}>
+                        {formikProps.errors.name}
                       </Text>
-                      <Text style={{ color: "red" }}>
+                      <Text style={{ color: "#a31717", marginTop: 2 }}>
                         {formikProps.errors.password}
-                      </Text> */}
-                      {/* ERRER MESSAGES */}
+                      </Text>
                       {formikProps.isSubmitting ? (
                         <ActivityIndicator />
                       ) : (
-                        <View
-                          style={{
-                            marginTop: 15,
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            width: 200,
-                          }}
-                        >
-                          <View
-                            style={{
-                              flexDirection: "column",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
+                        <View style={styles.submitButtonContainer}>
+                          <TouchableOpacity
+                            type="submit"
+                            activeOpacity={0.8}
+                            onPress={formikProps.handleSubmit}
                           >
-                            <View style={{ marginBottom: -5 }}>
-                              <Button
-                                color="#ddd"
-                                title="Back"
-                                onPress={this.showForm}
-                              />
+                            <View
+                              style={[
+                                styles.submitButton,
+                                { width: 150, marginBottom: 5 },
+                              ]}
+                            >
+                              <Text style={styles.submitButtonText}>
+                                {this.state.formType === "find"
+                                  ? "Sign In"
+                                  : "Create New Account"}
+                              </Text>
                             </View>
-                            <Button
-                              color="#ddd"
-                              title="<<"
-                              onPress={this.showForm}
-                            />
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: "column",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={this.showForm}
                           >
-                            <View style={{ marginBottom: -5 }}>
-                              <Button
-                                color="#ddd"
-                                title="Enter"
-                                onPress={() =>
-                                  this.props.navigation.push("CharacterSelect")
-                                }
-                              />
+                            <View style={styles.submitButton}>
+                              <Text style={styles.submitButtonText}>
+                                {"Back"}
+                              </Text>
                             </View>
-                            <Button
-                              color="#ddd"
-                              title=">>"
-                              onPress={() =>
-                                this.props.navigation.push("CharacterSelect")
-                              }
-                            />
-                          </View>
+                          </TouchableOpacity>
                         </View>
                       )}
                     </View>

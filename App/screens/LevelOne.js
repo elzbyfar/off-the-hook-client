@@ -3,21 +3,17 @@ import { GameEngine } from "react-native-game-engine";
 import LottieView from "lottie-react-native";
 import Constants from "../helpers/Constants";
 import Physics from "../helpers/Physics";
+import Images from "../assets/Images";
 import Matter from "matter-js";
-import BackgroundImage from "../components/BackgroundImage";
 import Floor from "../components/Floor";
 import Fish from "../components/Fish";
+import Food from "../components/Food";
 import Hook from "../components/Hook";
 import Crab from "../components/Crab";
 import PurpleShark from "../components/PurpleShark";
-import Meatball from "../components/Meatball";
-import Food from "../components/Food";
-// import LottieView from "lottie-react-native";
-// import Ceiling from "../components/Ceiling";
-// import GenerateLines from "../helpers/GenerateLines";
+import FishBones from "../components/FishBones";
 
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import Images from "../assets/Images";
 
 const styles = StyleSheet.create({
   gameView: {
@@ -62,7 +58,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: "black",
-    opacity: 0.8,
+    opacity: 0.7,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -111,8 +107,9 @@ class LevelOne extends Component {
       score: 0,
     };
     this.gameEngine = null;
-    this.entities = this.setupWorld();
+    this.entities = this.createWorld();
   }
+
   nextLevel = () => {
     if (this.state.score >= 100) {
       this.setState({
@@ -121,8 +118,8 @@ class LevelOne extends Component {
     }
   };
 
-  setupWorld = () => {
-    //GENERATE ENTITIES FOR USE
+  createWorld = () => {
+    //DECLARE ENTITIES FIRST APPEARANCE
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
     world.gravity.y = 0.35;
@@ -133,20 +130,6 @@ class LevelOne extends Component {
       Constants.fishWidth,
       Constants.fishHeight
     );
-    // let backgroundImage1 = Matter.Bodies.polygon(
-    //   Constants.backgroundImageWidth / 2,
-    //   1000,
-    //   4,
-    //   Constants.maxHeight,
-    //   { isStatic: true }
-    // );
-    // let backgroundImage2 = Matter.Bodies.polygon(
-    //   Constants.backgroundImageWidth / 2,
-    //   1000,
-    //   4,
-    //   Constants.maxHeight,
-    //   { isStatic: true }
-    // );
     let floor1 = Matter.Bodies.rectangle(
       Constants.floorWidth / 2,
       Constants.maxHeight - 60,
@@ -161,53 +144,55 @@ class LevelOne extends Component {
       Constants.floorHeight,
       { isStatic: true }
     );
-
-    let hook1 = Matter.Bodies.rectangle(
+    let hook1 = Matter.Bodies.circle(
       Constants.maxWidth * 4 - Constants.hookWidth / 2,
-      Constants.maxHeight / 3,
-      Constants.hookWidth,
-      Constants.hookHeight,
+      Constants.maxHeight / 10,
+      Constants.hookRadius,
       { isStatic: true }
     );
-    let crab = Matter.Bodies.rectangle(
+    let hook2 = Matter.Bodies.circle(
+      Constants.maxWidth * 4 - Constants.hookWidth / 2,
+      Constants.maxHeight / 10,
+      Constants.hookRadius,
+      { isStatic: true }
+    );
+    let crab = Matter.Bodies.circle(
       Constants.maxWidth * 2 - Constants.crabWidth / 2,
-      Constants.maxHeight - 200,
-      Constants.crabWidth,
-      Constants.crabHeight,
+      Constants.maxHeight - 195,
+      Constants.crabRadius,
       { isStatic: true }
     );
-    let purpleShark = Matter.Bodies.rectangle(
-      Constants.maxWidth * 2 - Constants.purpleSharkWidth / 2,
-      Constants.maxHeight - 600,
-      Constants.purpleSharkWidth,
-      Constants.purpleSharkHeight,
+    let purpleShark = Matter.Bodies.circle(
+      Constants.maxWidth * 3 - Constants.purpleSharkWidth / 2,
+      Constants.maxHeight - 100 - (300 + Math.floor(Math.random() * 200)),
+      Constants.purpleSharkRadius,
       { isStatic: true }
     );
-    // let meatball = Matter.Bodies.rectangle(
-    //   Constants.maxWidth * 2 - Constants.meatballWidth / 2,
-    //   Constants.maxHeight -
-    //     Math.floor(Math.random() * 300) -
-    //     Math.floor(Math.random() * 300),
-    //   Constants.meatballWidth,
-    //   Constants.meatballHeight,
-    //   { isStatic: true }
-    // );
 
-    let food1 = Matter.Bodies.circle(
+    let fishBones = Matter.Bodies.circle(
+      Constants.maxWidth * 4 - Constants.fishBonesWidth / 2,
+      Constants.maxHeight - 350,
+      Constants.fishBonesRadius,
+      { isStatic: true }
+    );
+    let food1 = Matter.Bodies.polygon(
       (Constants.maxWidth * 3) / 2 - Math.floor(Math.random() * 300),
       Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
+      4,
       Constants.foodRadius,
       { isStatic: true }
     );
-    let food2 = Matter.Bodies.circle(
+    let food2 = Matter.Bodies.polygon(
       (Constants.maxWidth * 5) / 2 - Math.floor(Math.random() * 300),
       Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
+      4,
       Constants.foodRadius,
       { isStatic: true }
     );
-    let food3 = Matter.Bodies.circle(
+    let food3 = Matter.Bodies.polygon(
       (Constants.maxWidth * 7) / 2 - Math.floor(Math.random() * 300),
       Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
+      4,
       Constants.foodRadius,
       { isStatic: true }
     );
@@ -215,56 +200,43 @@ class LevelOne extends Component {
     //PLACE ENTITIES WITHIN MATTER.WORLD'S SCOPE
     Matter.World.add(world, [
       fish,
-      // backgroundImage1,
-      // backgroundImage2,
       floor1,
       floor2,
       hook1,
+      hook2,
       crab,
       purpleShark,
-      // meatball,
+      fishBones,
       food1,
       food2,
       food3,
-      // food4,
     ]);
 
     //COLLISION DETECTION
     Matter.Events.on(engine, "collisionStart", (event) => {
-      //PAIRS INVOLVED IN COLLISION
       let pairs = event.pairs;
 
-      if (pairs[0].bodyB.label === "Circle Body") {
-        pairs[0].isActive = false;
-        this.setState((state) => ({
-          score: state.score + 1,
-        }));
-      }
-      if (pairs[0].bodyA.label === "Circle Body") {
-        pairs[0].isActive = false;
-        this.setState((state) => ({
-          score: state.score + 1,
-        }));
-      }
-
+      //FOOD COLLISION
       if (pairs[0].bodyB.label === "Polygon Body") {
         pairs[0].isActive = false;
-        // this.setState((state) => ({
-        //   score: state.score + 1,
-        // }));
+        pairs[0].isStatic = false;
+        this.setState((state) => ({
+          score: state.score + 1,
+        }));
       }
       if (pairs[0].bodyA.label === "Polygon Body") {
         pairs[0].isActive = false;
-        // this.setState((state) => ({
-        //   score: state.score + 1,
-        // }));
+        pairs[0].isStatic = false;
+        this.setState((state) => ({
+          score: state.score + 1,
+        }));
       }
 
-      //EVENTS DISPATCHED TO ALL LISTENERS
+      //GAME OVER / NEXT LEVEL
       if (this.state.score >= 100) {
         this.gameEngine.dispatch({ type: "next-level" });
       }
-      if (pairs[0].bodyB.label === "Rectangle Body") {
+      if (pairs[0].bodyB.label === "Circle Body") {
         this.gameEngine.dispatch({ type: "game-over" });
       }
     });
@@ -273,14 +245,7 @@ class LevelOne extends Component {
     return {
       physics: { engine: engine, world: world },
       fish: { body: fish, pose: 1, renderer: Fish },
-      // backgroundImage1: {
-      //   body: backgroundImage1,
-      //   renderer: BackgroundImage,
-      // },
-      // backgroundImage2: {
-      //   body: backgroundImage2,
-      //   renderer: BackgroundImage,
-      // },
+
       floor1: {
         body: floor1,
         renderer: Floor,
@@ -289,10 +254,14 @@ class LevelOne extends Component {
         body: floor2,
         renderer: Floor,
       },
-      // hook1: {
-      //   body: hook1,
-      //   renderer: Hook,
-      // },
+      hook1: {
+        body: hook1,
+        renderer: Hook,
+      },
+      hook2: {
+        body: hook2,
+        renderer: Hook,
+      },
       crab: {
         body: crab,
         crabPose: 1,
@@ -303,12 +272,10 @@ class LevelOne extends Component {
         purpleSharkPose: 1,
         renderer: PurpleShark,
       },
-      // meatball: {
-      //   body: meatball,
-      //   meatballPose: 1,
-      //   pose: 1,
-      //   renderer: Meatball,
-      // },
+      fishBones: {
+        body: fishBones,
+        renderer: FishBones,
+      },
       food1: {
         body: food1,
         colorPick: 1,
@@ -341,7 +308,7 @@ class LevelOne extends Component {
   };
 
   reset = () => {
-    this.gameEngine.swap(this.setupWorld());
+    this.gameEngine.swap(this.createWorld());
     this.setState({
       score: 0,
       running: true,
@@ -361,7 +328,7 @@ class LevelOne extends Component {
           source={require("../assets/img/animations/bubbles.json")}
           autoPlay
           loop
-          resizeMode="contain"
+          resizeMode="cover"
         />
         <GameEngine
           ref={(ref) => {

@@ -27,9 +27,9 @@ export default class Crab extends Component {
           position: "absolute",
           top: y,
           left: x,
-          width: width,
-          height: height,
-          opacity: 0.9,
+          width: 110,
+          height: 92,
+          // opacity: 0.9,
         }}
         resizeMode="contain"
         source={image}
