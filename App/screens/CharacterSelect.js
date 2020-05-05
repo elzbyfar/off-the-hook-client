@@ -11,7 +11,7 @@ class CharacterSelect extends Component {
     this.state = {
       unlockedCharacters: [],
       unlockedLevels: [],
-      keys: 0,
+      keys: null,
     };
   }
 
@@ -30,6 +30,8 @@ class CharacterSelect extends Component {
         }));
       });
   }
+
+  componentDidUpdate() {}
 
   selectionHandler = (name) => {
     if (this.state.unlockedCharacters.includes(name)) {
@@ -66,9 +68,10 @@ class CharacterSelect extends Component {
     }
   };
 
-  renderCharacterImage = (name) => {
+  renderCharacterImage = (name, index) => {
     return (
       <TouchableOpacity
+        key={index}
         style={styles.characterBox}
         onPress={() => this.selectionHandler(name)}
         activeOpacity={0.6}
@@ -89,7 +92,6 @@ class CharacterSelect extends Component {
   };
 
   renderLock = () => {
-    console.log(this.state.keys);
     if (this.state.keys === 0) {
       return (
         <LottieView
@@ -98,7 +100,7 @@ class CharacterSelect extends Component {
           resizeMode="contain"
         />
       );
-    } else if (this.state.keys > 0) {
+    } else {
       return (
         <LottieView
           style={styles.lock}
@@ -110,19 +112,29 @@ class CharacterSelect extends Component {
     }
   };
 
+  callRenderer = () => {
+    let characters = [
+      "Nemo",
+      "Ignatius",
+      "Tummy Rub",
+      "Ariana",
+      "Loquacious",
+      "Garrett",
+      "Doug",
+      "Roger Stan Smith",
+    ];
+    let boxes = characters.map((char, index) => {
+      return this.renderCharacterImage(char, index);
+    });
+    return boxes;
+  };
+
   render() {
     return (
       <View style={styles.CharacterSelectView}>
         <Text style={styles.heading}>SELECT A SWIMMER</Text>
         <View style={styles.boxes}>
-          {this.renderCharacterImage("Nemo")}
-          {this.renderCharacterImage("Ignatius")}
-          {this.renderCharacterImage("Tummy Rub")}
-          {this.renderCharacterImage("Ariana")}
-          {this.renderCharacterImage("Loquacious")}
-          {this.renderCharacterImage("Garrett")}
-          {this.renderCharacterImage("Doug")}
-          {this.renderCharacterImage("Roger Stan Smith")}
+          {this.state.keys !== null && this.callRenderer()}
         </View>
         <View style={styles.keyInfoContainer}>
           <View style={styles.keyBox}>

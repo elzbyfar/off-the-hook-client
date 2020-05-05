@@ -22,27 +22,72 @@ class Map extends Component {
     this.state = {
       unlockedLevels: [],
       allLevels: [],
-      characterName: "",
+      characterName: null,
       characterStats: [],
     };
   }
 
+  userID = this.props.route.params.user.id;
+
+  characterID = null;
+
   componentDidMount() {
-    fetch("http://localhost:3000/api/v1/statistics/", {
+    let bestTime = null;
+    let relatedStats = null;
+    let bestScore = null;
+    let capturedKey = null;
+    let status = null;
+    this.setState({
+      characterName: this.props.route.params.character,
+    });
+    this.findCharacterID(this.props.route.params.character);
+    fetch(`http://localhost:3000/api/v1/statistics/${this.userID}`, {
       method: "GET",
     })
       .then((resp) => resp.json())
       .then((stats) => {
-        const userStats = stats.filter((stat) => {
-          return stat.user_id === this.props.route.params.user.id;
-        });
-        console.log(userStats);
-        if (userStats.length === 0) {
-          console.log("nothing found");
+        if (stats.length === 0) {
           return;
         }
+        relatedStats = stats.filter((stat) => {
+          return stat.character_id === this.characterID;
+        });
+        console.log(relatedStats);
+
+        bestTime = relatedStats.sort((a, b) => {
+          a.time_remaining > b.time_remaining ? 1 : -1;
+        });
       });
   }
+
+  findCharacterID = (name) => {
+    switch (name) {
+      case "Nemo":
+        this.characterID = 1;
+        break;
+      case "Ignatius":
+        this.characterID = 2;
+        break;
+      case "Tummy Rub":
+        this.characterID = 3;
+        break;
+      case "Ariana":
+        this.characterID = 4;
+        break;
+      case "Loquacious":
+        this.characterID = 5;
+        break;
+      case "Garrett":
+        this.characterID = 6;
+        break;
+      case "Doug":
+        this.characterID = 7;
+        break;
+      case "Roger Stan Smith":
+        this.characterID = 8;
+        break;
+    }
+  };
 
   render() {
     return (
@@ -62,6 +107,15 @@ class Map extends Component {
           <View style={styles.levelCard}>
             <View style={styles.midSection}>
               <View style={styles.imageView}>
+                <View style={styles.levelRequirementsContainer}>
+                  <View style={styles.levelRequirements}>
+                    <Text style={styles.objectives}>OBJECTIVES</Text>
+                    {/* <Text>Score</Text> */}
+                    <Text>1 Key</Text>
+                    <Text>100 Points</Text>
+                    <Text>{`< ${"120"} Seconds`}</Text>
+                  </View>
+                </View>
                 <Image
                   style={styles.levelImage}
                   source={Images.backgroundImage}
@@ -81,17 +135,26 @@ class Map extends Component {
         <View style={styles.characterInfoContainer}>
           <View style={styles.characterCard}>
             <View style={styles.levelDetails}>
-              {/* <View style={styles.userStats}>
-                <Text>User Stats</Text>
-              </View> */}
-              <View style={styles.levelRequirements}>
-                <Text>How To Complete This Level</Text>
-                <Text>Score: 100 Points</Text>
-                <Text>In Under: 120 Seconds</Text>
+              <View style={styles.characterPhotoContainer}>
+                <Image
+                  style={styles.characterPhoto}
+                  source={
+                    this.state.characterName &&
+                    Images[this.state.characterName.toLowerCase()]
+                  }
+                  resizeMode="contain"
+                />
+                <Text style={styles.characterName}>
+                  {this.state.characterName}
+                </Text>
               </View>
-              {/* <View style={styles.topStats}>
-                <Text>Global Leader</Text>
-              </View> */}
+
+              <View style={styles.userStats}>
+                <Text style={styles.stats}>KEY: </Text>
+                <Text style={styles.stats}>BEST TIME:</Text>
+                <Text style={styles.stats}>BEST SCORE:</Text>
+                <Text style={styles.stats}>STATUS:</Text>
+              </View>
             </View>
             <View style={styles.startButtonContainer}>
               <TouchableOpacity

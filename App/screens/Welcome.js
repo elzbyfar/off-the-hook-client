@@ -8,10 +8,7 @@ import * as yup from "yup";
 import {
   View,
   Text,
-  Button,
   TextInput,
-  StyleSheet,
-  Image,
   StatusBar,
   SafeAreaView,
   TouchableOpacity,
@@ -19,8 +16,6 @@ import {
   Animated,
   ActivityIndicator,
 } from "react-native";
-
-const screen = Dimensions.get("window");
 
 const validationSchema = yup.object().shape({
   name: yup.string().label("name").required(),
