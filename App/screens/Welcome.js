@@ -39,6 +39,8 @@ class Welcome extends React.Component {
     };
   }
 
+  userID = null;
+
   showForm = (type) => {
     this.setState((state) => ({
       showForm: !state.showForm,
@@ -104,20 +106,30 @@ class Welcome extends React.Component {
                         "Content-Type": "application/json",
                         Accept: "application/json",
                       },
-                      body: JSON.stringify(values),
+                      body: JSON.stringify({
+                        ...values,
+                        unlocked_characters: ["Nemo"],
+                        unlocked_levels: ["Level One"],
+                        keys: 0,
+                      }),
                     })
                       .then((resp) => resp.json())
                       .then((user) => {
+                        this.userID = user.id;
                         this.setState({
                           user: {
                             id: user.id,
                             name: user.name,
+                            unlocked_characters: ["Nemo"],
+                            unlocked_levels: ["Level One"],
+                            keys: 0,
                           },
                         });
                       })
                       .then(() =>
                         this.props.navigation.push("CharacterSelect", {
                           user: this.state.user,
+                          newUser: true,
                         })
                       );
                   } else if (this.state.formType === "find") {
@@ -139,6 +151,7 @@ class Welcome extends React.Component {
                       .then(() =>
                         this.props.navigation.push("CharacterSelect", {
                           user: this.state.user,
+                          newUser: false,
                         })
                       );
                   }

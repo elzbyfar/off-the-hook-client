@@ -11,6 +11,8 @@ class CharacterSelect extends Component {
     this.state = {
       unlockedCharacters: [],
       unlockedLevels: [],
+      allCharacters: [],
+      allLevels: [],
       keys: null,
     };
   }
@@ -18,6 +20,23 @@ class CharacterSelect extends Component {
   userID = this.props.route.params.user.id;
 
   componentDidMount() {
+    if (this.props.route.params.newUser) {
+      fetch("http://localhost:3000/api/v1/statistics", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          pellet_points: 0,
+          captured_key: false,
+          completed: false,
+          user_id: this.userID,
+          level_id: 1,
+          character_id: 1,
+        }),
+      });
+    }
     fetch(`http://localhost:3000/api/v1/users/${this.userID}`, {
       method: "GET",
     })
@@ -29,16 +48,38 @@ class CharacterSelect extends Component {
           keys: user.keys,
         }));
       });
-  }
 
-  componentDidUpdate() {}
+    fetch("http://localhost:3000/api/v1/characters", {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .then((characters) => {
+        this.setState({
+          allCharacters: characters,
+        });
+      });
+    fetch("http://localhost:3000/api/v1/levels", {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .then((levels) => {
+        this.setState({
+          allLevels: levels,
+        });
+      });
+  }
 
   selectionHandler = (name) => {
     if (this.state.unlockedCharacters.includes(name)) {
       this.props.navigation.push("Map", {
         user: this.props.route.params.user,
-        character: name,
         unlockedLevels: this.state.unlockedLevels,
+        character: this.state.allCharacters.find((char) => char.name === name),
+        currentLevel: this.state.allLevels.find(
+          (level) =>
+            level.level_name ===
+            this.state.unlockedLevels[this.state.unlockedLevels.length - 1]
+        ),
       });
     } else if (
       !this.state.unlockedCharacters.includes(name) &&
@@ -59,6 +100,25 @@ class CharacterSelect extends Component {
         keys: state.keys - 1,
         unlockedCharacters: [...state.unlockedCharacters, name],
       }));
+      this.state.unlockedLevels.map((level, index) => {
+        fetch("http://localhost:3000/api/v1/statistics", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            pellet_points: 0,
+            captured_key: false,
+            completed: false,
+            user_id: this.userID,
+            level_id: index + 1,
+            character_id: this.state.allCharacters.find(
+              (char) => char.name === name
+            ).id,
+          }),
+        });
+      });
     } else {
       alert(
         name +

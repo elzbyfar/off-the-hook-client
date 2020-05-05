@@ -21,99 +21,121 @@ class Map extends Component {
     super(props);
     this.state = {
       unlockedLevels: [],
+      currentLevel: {},
+      currentStats: {
+        key: "",
+        status: "",
+        mostPelletPoints: 0,
+      },
       allLevels: [],
       characterName: null,
-      characterStats: [],
+      characterID: null,
     };
   }
 
   userID = this.props.route.params.user.id;
-
-  characterID = null;
+  characterID = this.props.route.params.character.id;
+  characterName = this.props.route.params.character.name;
+  unlockedLevels = this.props.route.params.unlockedLevels;
+  currentLevel = this.props.route.params.currentLevel;
 
   componentDidMount() {
-    let bestTime = null;
-    let relatedStats = null;
-    let bestScore = null;
-    let capturedKey = null;
-    let status = null;
-    this.setState({
-      characterName: this.props.route.params.character,
-    });
-    this.findCharacterID(this.props.route.params.character);
-    fetch(`http://localhost:3000/api/v1/statistics/${this.userID}`, {
+    fetch("http://localhost:3000/api/v1/levels/", {
       method: "GET",
     })
       .then((resp) => resp.json())
-      .then((stats) => {
+      .then((levels) => {
+        console.log(this.currentLevel);
+        this.setState({
+          allLevels: levels,
+          currentLevel: this.currentLevel,
+        });
+      });
+
+    let relatedStats = null;
+    let mostPelletPoints = null;
+    let key = null;
+    let status = null;
+    this.setState({
+      characterName: this.characterName,
+      characterID: this.characterID,
+      unlockedLevels: this.unlockedLevels,
+    });
+
+    fetch(`http://localhost:3000/api/v1/characters/${this.characterID}`, {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .then((character) => {
+        let stats = character.statistics;
         if (stats.length === 0) {
           return;
         }
         relatedStats = stats.filter((stat) => {
-          return stat.character_id === this.characterID;
+          return (
+            stat.user_id === this.userID &&
+            stat.level_id === this.currentLevel.id
+          );
         });
-        console.log(relatedStats);
+        mostPelletPoints = relatedStats.sort((a, b) => {
+          return a.pellet_points > b.pellet_points ? -1 : 1;
+        })[0].pellet_points;
 
-        bestTime = relatedStats.sort((a, b) => {
-          a.time_remaining > b.time_remaining ? 1 : -1;
+        status = relatedStats.find((stats) => {
+          return stats.completed;
         });
+        status ? (status = "Complete!") : (status = "Not Complete");
+
+        key = relatedStats.find((stats) => {
+          return stats.captured_key;
+        });
+        key ? (key = "Captured!") : (key = "Not Captured");
+
+        this.setState((state) => ({
+          currentStats: {
+            ...state.currentStats,
+            key: key,
+            status: status,
+            mostPelletPoints: mostPelletPoints,
+          },
+        }));
       });
   }
 
-  findCharacterID = (name) => {
-    switch (name) {
-      case "Nemo":
-        this.characterID = 1;
-        break;
-      case "Ignatius":
-        this.characterID = 2;
-        break;
-      case "Tummy Rub":
-        this.characterID = 3;
-        break;
-      case "Ariana":
-        this.characterID = 4;
-        break;
-      case "Loquacious":
-        this.characterID = 5;
-        break;
-      case "Garrett":
-        this.characterID = 6;
-        break;
-      case "Doug":
-        this.characterID = 7;
-        break;
-      case "Roger Stan Smith":
-        this.characterID = 8;
-        break;
-    }
-  };
+  setupCharacter = () => {};
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.levelNameView}>
-          <Text style={styles.levelCountText}>LEVEL ONE: </Text>
-          <Text style={styles.levelNameText}>La Palma</Text>
+          <Text style={styles.levelCountText}>
+            {this.state.currentLevel.level_name}
+          </Text>
+          <Text style={styles.levelNameText}>
+            {this.state.currentLevel.territory_name}
+          </Text>
         </View>
         <View style={styles.levelsContainer}>
-          <View style={styles.leftArrow}>
+          {/* <View style={styles.leftArrow}>
             <Image
               style={styles.arrows}
               source={Images.left}
               resizeMode="contain"
             />
-          </View>
+          </View> */}
           <View style={styles.levelCard}>
             <View style={styles.midSection}>
               <View style={styles.imageView}>
                 <View style={styles.levelRequirementsContainer}>
                   <View style={styles.levelRequirements}>
                     <Text style={styles.objectives}>OBJECTIVES</Text>
-                    {/* <Text>Score</Text> */}
-                    <Text>1 Key</Text>
-                    <Text>100 Points</Text>
-                    <Text>{`< ${"120"} Seconds`}</Text>
+                    <Text>
+                      Collect {this.state.currentLevel.pellet_points_needed}{" "}
+                      Pellet Points
+                    </Text>
+                    <Text>
+                      Endure {this.state.currentLevel.max_time} Seconds
+                    </Text>
                   </View>
                 </View>
                 <Image
@@ -124,13 +146,13 @@ class Map extends Component {
               </View>
             </View>
           </View>
-          <View style={styles.rightArrow}>
+          {/* <View style={styles.rightArrow}>
             <Image
               style={styles.arrows}
               source={Images.right}
               resizeMode="contain"
             />
-          </View>
+          </View> */}
         </View>
         <View style={styles.characterInfoContainer}>
           <View style={styles.characterCard}>
@@ -140,7 +162,12 @@ class Map extends Component {
                   style={styles.characterPhoto}
                   source={
                     this.state.characterName &&
-                    Images[this.state.characterName.toLowerCase()]
+                    Images[
+                      this.state.characterName
+                        .split(" ")
+                        .join("_")
+                        .toLowerCase()
+                    ]
                   }
                   resizeMode="contain"
                 />
@@ -150,10 +177,54 @@ class Map extends Component {
               </View>
 
               <View style={styles.userStats}>
-                <Text style={styles.stats}>KEY: </Text>
-                <Text style={styles.stats}>BEST TIME:</Text>
-                <Text style={styles.stats}>BEST SCORE:</Text>
-                <Text style={styles.stats}>STATUS:</Text>
+                <Text style={styles.statsHeading}>
+                  {this.state.currentLevel.level_name} Stats
+                </Text>
+                <Text style={styles.stats}>
+                  KEY:{" "}
+                  <Text
+                    style={{
+                      color:
+                        this.state.currentStats.key === "Captured!"
+                          ? "#f27f33"
+                          : "#d5ebde",
+                      fontWeight: "600",
+                      fontSize: 14,
+                    }}
+                  >
+                    {this.state.currentStats.key}
+                  </Text>
+                </Text>
+                <Text style={styles.stats}>
+                  STATUS:{" "}
+                  <Text
+                    style={{
+                      color:
+                        this.state.currentStats.status === "Complete!"
+                          ? "#f27f33"
+                          : "#d5ebde",
+                      fontWeight: "600",
+                      fontSize: 14,
+                    }}
+                  >
+                    {this.state.currentStats.status}
+                  </Text>
+                </Text>
+                <Text style={styles.stats}>
+                  MOST PELLET POINTS:{" "}
+                  <Text
+                    style={{
+                      color:
+                        this.state.currentStats.status === "Complete!"
+                          ? "#f27f33"
+                          : "#d5ebde",
+                      fontWeight: "600",
+                      fontSize: 14,
+                    }}
+                  >
+                    {this.state.currentStats.mostPelletPoints}
+                  </Text>
+                </Text>
               </View>
             </View>
             <View style={styles.startButtonContainer}>
