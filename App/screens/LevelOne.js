@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: "black",
-    opacity: 0.7,
+    opacity: 0.6,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -71,12 +71,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   nextLevelButton: {
-    marginTop: 15,
+    marginTop: 50,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "#fff",
     backgroundColor: "#22a1e6",
+    opacity: 1.9,
     color: "#eee",
     height: 35,
     width: 200,
@@ -88,14 +89,22 @@ const styles = StyleSheet.create({
     color: "#eee",
     fontSize: 20,
   },
-  scoreContainer: {
+  statsContainer: {
     marginTop: Constants.maxHeight - 100,
+    paddingHorizontal: 20,
+    width: Constants.maxWidth,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  statBoxes: {
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
   },
-  score: {
-    fontSize: 20,
-    color: "#fff",
+  stats: {
+    fontSize: 24,
+    color: "#aaa",
   },
 });
 
@@ -104,14 +113,36 @@ class LevelOne extends Component {
     super(props);
     this.state = {
       running: true,
-      score: 0,
+      pelletPoints: 0,
+      characterID: null,
+      levelID: null,
+      userID: null,
+      timer: null,
+      key: null,
     };
     this.gameEngine = null;
     this.entities = this.createWorld();
   }
 
+  interval = null;
+
+  componentDidMount() {
+    this.startInterval();
+    this.setState({
+      levelID: this.props.route.params.currentLevel.id,
+      timer: this.props.route.params.currentLevel.max_time,
+      key: this.props.route.params.currentStats.key,
+      userID: this.props.route.params.userID,
+      characterID: this.props.route.params.characterID,
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   nextLevel = () => {
-    if (this.state.score >= 100) {
+    if (this.state.pelletPoints >= 100) {
       this.setState({
         running: false,
       });
@@ -146,7 +177,7 @@ class LevelOne extends Component {
     );
     let hook1 = Matter.Bodies.circle(
       Constants.maxWidth * 4 - Constants.hookWidth / 2,
-      Constants.maxHeight / 10,
+      Constants.maxHeight / 8,
       Constants.hookRadius,
       { isStatic: true }
     );
@@ -177,21 +208,21 @@ class LevelOne extends Component {
     );
     let food1 = Matter.Bodies.polygon(
       (Constants.maxWidth * 3) / 2 - Math.floor(Math.random() * 300),
-      Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
+      5,
       4,
       Constants.foodRadius,
       { isStatic: true }
     );
     let food2 = Matter.Bodies.polygon(
       (Constants.maxWidth * 5) / 2 - Math.floor(Math.random() * 300),
-      Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
+      5,
       4,
       Constants.foodRadius,
       { isStatic: true }
     );
     let food3 = Matter.Bodies.polygon(
       (Constants.maxWidth * 7) / 2 - Math.floor(Math.random() * 300),
-      Constants.maxHeight - (600 + Math.floor(Math.random() * 200)),
+      5,
       4,
       Constants.foodRadius,
       { isStatic: true }
@@ -221,19 +252,19 @@ class LevelOne extends Component {
         pairs[0].isActive = false;
         pairs[0].isStatic = false;
         this.setState((state) => ({
-          score: state.score + 1,
+          pelletPoints: state.pelletPoints + 1,
         }));
       }
       if (pairs[0].bodyA.label === "Polygon Body") {
         pairs[0].isActive = false;
         pairs[0].isStatic = false;
         this.setState((state) => ({
-          score: state.score + 1,
+          pelletPoints: state.pelletPoints + 1,
         }));
       }
 
       //GAME OVER / NEXT LEVEL
-      if (this.state.score >= 100) {
+      if (this.state.timer === 0) {
         this.gameEngine.dispatch({ type: "next-level" });
       }
       if (pairs[0].bodyB.label === "Circle Body") {
@@ -299,6 +330,22 @@ class LevelOne extends Component {
       this.setState({
         running: false,
       });
+      clearInterval(this.interval);
+      fetch("http://localhost:3000/api/v1/statistics", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          pellet_points: this.state.pelletPoints,
+          captured_key: this.state.key === "Captured!" ? true : false,
+          completed: false,
+          user_id: this.state.userID,
+          level_id: this.state.levelID,
+          character_id: this.state.characterID,
+        }),
+      });
     }
     if (event.type === "next-level") {
       this.setState({
@@ -307,12 +354,22 @@ class LevelOne extends Component {
     }
   };
 
+  startInterval = () => {
+    this.interval = setInterval(() => {
+      this.setState((state) => ({
+        timer: state.timer - 1,
+      }));
+    }, 1000);
+  };
+
   reset = () => {
     this.gameEngine.swap(this.createWorld());
     this.setState({
-      score: 0,
+      pelletPoints: 0,
       running: true,
+      timer: this.props.route.params.currentLevel.max_time,
     });
+    this.startInterval();
   };
 
   render() {
@@ -320,7 +377,7 @@ class LevelOne extends Component {
       <View style={styles.gameView}>
         <Image
           resizeMode="cover"
-          source={Images.backgroundImage}
+          source={Images.backgroundImage1}
           style={styles.backgroundImage}
         />
         <LottieView
@@ -340,7 +397,7 @@ class LevelOne extends Component {
           onEvent={this.onEvent}
           entities={this.entities}
         />
-        {!this.state.running && this.state.score < 100 && (
+        {!this.state.running && (
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {}}
@@ -358,7 +415,7 @@ class LevelOne extends Component {
             </View>
           </TouchableOpacity>
         )}
-        {!this.state.running && this.state.score >= 100 && (
+        {!this.state.running && this.state.timer === 0 && (
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {}}
@@ -376,8 +433,54 @@ class LevelOne extends Component {
             </View>
           </TouchableOpacity>
         )}
-        <View style={styles.scoreContainer}>
-          <Text style={styles.score}>Score: {this.state.score}</Text>
+        <View style={styles.statsContainer}>
+          <View style={[styles.statBoxes, { marginTop: -15 }]}>
+            <Text style={[styles.stats, { fontSize: 14 }]}>PELLET</Text>
+            <Text style={[styles.stats, { fontSize: 14 }]}>POINTS</Text>
+            <Text
+              style={[styles.stats, { fontWeight: "600", color: "#E4B23E" }]}
+            >
+              {this.state.pelletPoints}
+            </Text>
+          </View>
+
+          <View style={styles.statBoxes}>
+            <Text style={[styles.stats, { fontSize: 14 }]}>TIME</Text>
+            <Text
+              style={[styles.stats, { fontWeight: "600", color: "#E4B23E" }]}
+            >
+              {this.state.timer}
+            </Text>
+          </View>
+          <View style={styles.statBoxes}>
+            <Text style={[styles.stats, { fontSize: 14 }]}>KEY</Text>
+            <View
+              style={{
+                width: 50,
+                height: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={Images.key}
+                resizeMode="contain"
+                style={{
+                  width: 40,
+                  height: 20,
+                  tintColor:
+                    this.state.currentStats &&
+                    this.state.currentStats.key !== "Captured!" &&
+                    "#888",
+                  opacity:
+                    this.state.currentStats &&
+                    this.state.currentStats.key !== "Captured!"
+                      ? 0.5
+                      : 1,
+                }}
+              />
+            </View>
+          </View>
         </View>
       </View>
     );

@@ -15,8 +15,8 @@ export default class Hook extends Component {
           position: "absolute",
           top: y,
           left: x,
-          width: 103,
-          height: 400,
+          width: 90,
+          height: 350,
           opacity: 0.6,
           // tintColor: "#",
         }}

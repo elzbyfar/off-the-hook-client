@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  ScrollView,
   StyleSheet,
   Animated,
 } from "react-native";
@@ -16,6 +17,16 @@ import {
 
 import Constants from "../helpers/Constants";
 
+const backgroundImages = [
+  Images.backgroundImage1,
+  Images.backgroundImage2,
+  Images.backgroundImage3,
+  Images.backgroundImage4,
+  Images.backgroundImage5,
+  Images.backgroundImage6,
+  Images.backgroundImage7,
+];
+
 class Map extends Component {
   constructor(props) {
     super(props);
@@ -27,9 +38,11 @@ class Map extends Component {
         status: "",
         mostPelletPoints: 0,
       },
-      allLevels: [],
+      characterStats: null,
+      allLevels: null,
       characterName: null,
       characterID: null,
+      active: 0,
     };
   }
 
@@ -37,7 +50,7 @@ class Map extends Component {
   characterID = this.props.route.params.character.id;
   characterName = this.props.route.params.character.name;
   unlockedLevels = this.props.route.params.unlockedLevels;
-  currentLevel = this.props.route.params.currentLevel;
+  // currentLevel = this.props.route.params.currentLevel;
 
   componentDidMount() {
     fetch("http://localhost:3000/api/v1/levels/", {
@@ -45,17 +58,14 @@ class Map extends Component {
     })
       .then((resp) => resp.json())
       .then((levels) => {
-        console.log(this.currentLevel);
         this.setState({
           allLevels: levels,
-          currentLevel: this.currentLevel,
+          currentLevel: levels[0],
         });
       });
 
     let relatedStats = null;
-    let mostPelletPoints = null;
-    let key = null;
-    let status = null;
+
     this.setState({
       characterName: this.characterName,
       characterID: this.characterID,
@@ -72,88 +82,184 @@ class Map extends Component {
           return;
         }
         relatedStats = stats.filter((stat) => {
-          return (
-            stat.user_id === this.userID &&
-            stat.level_id === this.currentLevel.id
-          );
+          return stat.user_id === this.userID;
         });
-        mostPelletPoints = relatedStats.sort((a, b) => {
-          return a.pellet_points > b.pellet_points ? -1 : 1;
-        })[0].pellet_points;
-
-        status = relatedStats.find((stats) => {
-          return stats.completed;
+        this.setState({
+          characterStats: relatedStats,
         });
-        status ? (status = "Complete!") : (status = "Not Complete");
 
-        key = relatedStats.find((stats) => {
-          return stats.captured_key;
-        });
-        key ? (key = "Captured!") : (key = "Not Captured");
-
-        this.setState((state) => ({
-          currentStats: {
-            ...state.currentStats,
-            key: key,
-            status: status,
-            mostPelletPoints: mostPelletPoints,
-          },
-        }));
+        this.setCurrentStats();
       });
   }
 
   setupCharacter = () => {};
 
+  change = ({ nativeEvent }) => {
+    let levelStats;
+    let mostPelletPoints;
+    let key;
+    let status;
+    let slide;
+
+    slide = Math.ceil(
+      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+    );
+    slide > 6 && (slide = 6);
+    slide < 0 && (slide = 0);
+
+    levelStats = this.state.characterStats.filter((stats) => {
+      return stats.level_id === slide + 1;
+    });
+
+    if (levelStats.length === 0) {
+      mostPelletPoints = 0;
+      key = "No Attempts";
+      status = "No Attempts";
+    } else {
+      mostPelletPoints = levelStats.sort((a, b) => {
+        return a.pellet_points > b.pellet_points ? -1 : 1;
+      })[0].pellet_points;
+
+      status = levelStats.find((stats) => {
+        return stats.completed;
+      });
+      status ? (status = "Complete!") : (status = "Not Complete");
+
+      key = levelStats.find((stats) => {
+        return stats.captured_key;
+      });
+      key ? (key = "Captured!") : (key = "Not Captured");
+    }
+
+    if (slide !== this.state.active) {
+      this.setState((state) => ({
+        active: slide,
+        currentLevel: state.allLevels[slide],
+        currentStats: {
+          ...state.currentStats,
+          key: key,
+          status: status,
+          mostPelletPoints: mostPelletPoints,
+        },
+      }));
+    }
+  };
+
+  setCurrentStats = () => {
+    let levelStats;
+    let mostPelletPoints;
+    let key;
+    let status;
+
+    levelStats = this.state.characterStats.filter((stats) => {
+      return stats.level_id === this.state.active + 1;
+    });
+
+    if (levelStats.length === 0) {
+      mostPelletPoints = 0;
+      key = "No Attempts";
+      status = "No Attempts";
+    } else {
+      mostPelletPoints = levelStats.sort((a, b) => {
+        return a.pellet_points > b.pellet_points ? -1 : 1;
+      })[0].pellet_points;
+
+      status = levelStats.find((stats) => {
+        return stats.completed;
+      });
+      status ? (status = "Complete!") : (status = "Not Complete");
+
+      key = levelStats.find((stats) => {
+        return stats.captured_key;
+      });
+      key ? (key = "Captured!") : (key = "Not Captured");
+    }
+
+    this.setState((state) => ({
+      currentStats: {
+        ...state.currentStats,
+        key: key,
+        status: status,
+        mostPelletPoints: mostPelletPoints,
+      },
+    }));
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.levelNameView}>
-          <Text style={styles.levelCountText}>
-            {this.state.currentLevel.level_name}
-          </Text>
-          <Text style={styles.levelNameText}>
-            {this.state.currentLevel.territory_name}
-          </Text>
-        </View>
-        <View style={styles.levelsContainer}>
-          {/* <View style={styles.leftArrow}>
+        {/* <View style={styles.levelsContainer}> */}
+        {/* <View style={styles.leftArrow}>
             <Image
               style={styles.arrows}
               source={Images.left}
               resizeMode="contain"
             />
           </View> */}
-          <View style={styles.levelCard}>
-            <View style={styles.midSection}>
-              <View style={styles.imageView}>
+        {/* <View style={styles.levelCard}> */}
+        {/* <View style={styles.midSection}> */}
+        <View style={styles.imageView}>
+          <ScrollView
+            pagingEnabled
+            horizontal
+            ref={this.setScrollViewRef}
+            onScroll={this.change}
+            showsHorizontalScrollIndicator={false}
+            style={{ flexDirection: "column" }}
+          >
+            {backgroundImages.map((image, index) => (
+              <View key={index} style={styles.imageWrapper}>
+                <Image
+                  source={image}
+                  style={styles.imageWrapperBackground}
+                  blurRadius={10}
+                  resizeMode="cover"
+                />
+                <View style={styles.levelNameView}>
+                  <Text style={styles.levelCountText}>
+                    {this.state.allLevels &&
+                      this.state.allLevels[index].level_name}
+                  </Text>
+                  <Text style={styles.levelNameText}>
+                    {this.state.allLevels &&
+                      this.state.allLevels[index].territory_name}
+                  </Text>
+                </View>
+                <Image
+                  key={index}
+                  style={styles.levelImage}
+                  source={image}
+                  resizeMode="contain"
+                />
                 <View style={styles.levelRequirementsContainer}>
                   <View style={styles.levelRequirements}>
                     <Text style={styles.objectives}>OBJECTIVES</Text>
-                    <Text>
-                      Collect {this.state.currentLevel.pellet_points_needed}{" "}
+                    <Text style={styles.objectiveItems}>
+                      {this.state.allLevels &&
+                        this.state.allLevels[index].pellet_points_needed}{" "}
                       Pellet Points
                     </Text>
-                    <Text>
-                      Endure {this.state.currentLevel.max_time} Seconds
+                    <Text style={styles.objectiveItems}>
+                      {this.state.allLevels &&
+                        this.state.allLevels[index].max_time}{" "}
+                      Seconds
                     </Text>
                   </View>
                 </View>
-                <Image
-                  style={styles.levelImage}
-                  source={Images.backgroundImage}
-                  resizeMode="cover"
-                />
               </View>
-            </View>
-          </View>
-          {/* <View style={styles.rightArrow}>
+            ))}
+          </ScrollView>
+        </View>
+        {/* </View> */}
+        {/* </View> */}
+        {/* <View style={styles.rightArrow}>
             <Image
               style={styles.arrows}
               source={Images.right}
               resizeMode="contain"
             />
           </View> */}
-        </View>
+        {/* </View> */}
         <View style={styles.characterInfoContainer}>
           <View style={styles.characterCard}>
             <View style={styles.levelDetails}>
@@ -172,13 +278,14 @@ class Map extends Component {
                   resizeMode="contain"
                 />
                 <Text style={styles.characterName}>
-                  {this.state.characterName}
+                  {this.state.characterName &&
+                    this.state.characterName.toUpperCase()}
                 </Text>
               </View>
 
               <View style={styles.userStats}>
                 <Text style={styles.statsHeading}>
-                  {this.state.currentLevel.level_name} Stats
+                  {`${this.state.currentLevel.level_name} Stats`.toUpperCase()}
                 </Text>
                 <Text style={styles.stats}>
                   KEY:{" "}
@@ -186,10 +293,10 @@ class Map extends Component {
                     style={{
                       color:
                         this.state.currentStats.key === "Captured!"
-                          ? "#f27f33"
+                          ? "#E4B23E"
                           : "#d5ebde",
                       fontWeight: "600",
-                      fontSize: 14,
+                      fontSize: 16,
                     }}
                   >
                     {this.state.currentStats.key}
@@ -201,10 +308,10 @@ class Map extends Component {
                     style={{
                       color:
                         this.state.currentStats.status === "Complete!"
-                          ? "#f27f33"
+                          ? "#E4B23E"
                           : "#d5ebde",
                       fontWeight: "600",
-                      fontSize: 14,
+                      fontSize: 16,
                     }}
                   >
                     {this.state.currentStats.status}
@@ -216,20 +323,29 @@ class Map extends Component {
                     style={{
                       color:
                         this.state.currentStats.status === "Complete!"
-                          ? "#f27f33"
+                          ? "#E4B23E"
                           : "#d5ebde",
                       fontWeight: "600",
-                      fontSize: 14,
+                      fontSize: 16,
                     }}
                   >
                     {this.state.currentStats.mostPelletPoints}
                   </Text>
                 </Text>
+                <Text></Text>
+                <Text></Text>
               </View>
             </View>
             <View style={styles.startButtonContainer}>
               <TouchableOpacity
-                onPress={() => this.props.navigation.push("LevelOne")}
+                onPress={() =>
+                  this.props.navigation.push("LevelOne", {
+                    currentLevel: this.state.currentLevel,
+                    currentStats: this.state.currentStats,
+                    userID: this.userID,
+                    characterID: this.state.characterID,
+                  })
+                }
                 activeOpacity={0.6}
                 style={styles.startButton}
               >
@@ -241,66 +357,6 @@ class Map extends Component {
       </View>
     );
   }
-
-  // let scale = React.useRef(new Animated.Value(1)).current;
-  // let translateX = React.useRef(new Animated.Value(0)).current;
-  // let translateY = React.useRef(new Animated.Value(0)).current;
-
-  // const handlePan = Animated.event(
-  //   [
-  //     {
-  //       nativeEvent: {
-  //         translationX: translateX,
-  //         translationY: translateY,
-  //       },
-  //     },
-  //   ],
-  //   {
-  //     useNativeDriver: true,
-  //   }
-  // );
-  // const handlePinch = Animated.event([{ nativeEvent: { scale } }]);
-  // return (
-  //   <PanGestureHandler onGestureEvent={handlePan}>
-  //     <Animated.View style={styles.container}>
-  //       <PinchGestureHandler onGestureEvent={handlePinch}>
-  //         <Animated.View
-  //           style={[
-  //             styles.mapView,
-  //             { transform: [{ scale }, { translateX }, { translateY }] },
-  //           ]}
-  //         >
-  //           <Animated.Image
-  //             source={Images.map}
-  //             style={styles.map}
-  //             resizeMode="contain"
-  //           />
-  //           <View style={styles.textBox}>
-  //             <Text style={styles.heading}>Trace Your Quest</Text>
-
-  //             <View style={{ justifyContent: "center", alignItems: "center" }}>
-  //               <View style={{ flexDirection: "row" }}>
-  //                 <Text>Level One: </Text>
-  //                 <Text style={{ fontWeight: "700" }}>La Palma</Text>
-  //               </View>
-  //               <View style={{ flexDirection: "row" }}>
-  //                 <Text>Objective: </Text>
-  //                 <Text style={{ fontWeight: "700" }}>40 Points</Text>
-  //               </View>
-  //               <TouchableOpacity
-  //                 onPress={() => navigation.push("LevelOne")}
-  //                 activeOpacity={0.6}
-  //                 style={styles.startButton}
-  //               >
-  //                 <Text style={styles.start}>START</Text>
-  //               </TouchableOpacity>
-  //             </View>
-  //           </View>
-  //         </Animated.View>
-  //       </PinchGestureHandler>
-  //     </Animated.View>
-  //   </PanGestureHandler>
-  // );
 }
 
 export default Map;

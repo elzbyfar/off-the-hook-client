@@ -37,17 +37,36 @@ const Physics = (entities, { touches, time }) => {
   }
 
   //HOOK REGENERATION + VERTICAL MOVEMENT
-  if (entities.hook1.body.position.x <= -100) {
+  if (entities.hook1.body.position.x <= -200) {
     Matter.Body.setPosition(entities.hook1.body, {
-      x: Constants.maxWidth * 3 - Constants.hookWidth / 2,
-      y: Constants.maxHeight / 10,
+      x: Constants.maxWidth * 2 - Constants.hookWidth / 2,
+      y: Constants.maxHeight / 8,
     });
   } else {
-    Matter.Body.translate(entities.hook1.body, { x: -5.5, y: 0 });
+    Matter.Body.translate(entities.hook1.body, { x: -3.0, y: 0 });
   }
-
-  if (entities.hook1.body.position.x - entities.fish.body.position.x < 180) {
-    Matter.Body.translate(entities.hook1.body, { x: 0, y: -12 });
+  if (entities.hook1.body.position.x - Constants.maxWidth < -200) {
+    Matter.Body.translate(entities.hook1.body, { x: 0, y: -4 });
+  } else if (
+    entities.hook1.body.position.x - Constants.maxWidth > 100 &&
+    entities.hook1.body.position.x - Constants.maxWidth < 200
+  ) {
+    Matter.Body.translate(entities.hook1.body, { x: 0, y: -4 });
+  } else if (
+    entities.hook1.body.position.x - Constants.maxWidth > 0 &&
+    entities.hook1.body.position.x - Constants.maxWidth < 100
+  ) {
+    Matter.Body.translate(entities.hook1.body, { x: 0, y: 4 });
+  } else if (
+    entities.hook1.body.position.x - Constants.maxWidth > -100 &&
+    entities.hook1.body.position.x - Constants.maxWidth < 0
+  ) {
+    Matter.Body.translate(entities.hook1.body, { x: 0, y: -4 });
+  } else if (
+    entities.hook1.body.position.x - Constants.maxWidth > -200 &&
+    entities.hook1.body.position.x - Constants.maxWidth < -100
+  ) {
+    Matter.Body.translate(entities.hook1.body, { x: 0, y: 4 });
   }
 
   //CRAB REGENERATION + VERTICAL MOVEMENT
@@ -57,7 +76,7 @@ const Physics = (entities, { touches, time }) => {
       y: Constants.maxHeight - 195,
     });
   } else {
-    Matter.Body.translate(entities.crab.body, { x: -4, y: 0 });
+    Matter.Body.translate(entities.crab.body, { x: -3.8, y: 0 });
   }
 
   //PURPLE SHARK REGENERATION
@@ -67,7 +86,7 @@ const Physics = (entities, { touches, time }) => {
       y: Constants.maxHeight - 100 - (300 + Math.floor(Math.random() * 200)),
     });
   } else {
-    Matter.Body.translate(entities.purpleShark.body, { x: -2.1, y: 0.2 });
+    Matter.Body.translate(entities.purpleShark.body, { x: -2.6, y: 0.2 });
   }
 
   //FISH BONES REGENERATION
@@ -90,16 +109,18 @@ const Physics = (entities, { touches, time }) => {
     if (entities["food" + n].body.position.x <= -200) {
       Matter.Body.setPosition(entities["food" + n].body, {
         x: (Constants.maxWidth * (n + 1)) / 2 - Math.floor(Math.random() * 300),
-        y: Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+        y: 5,
       });
     } else {
-      Matter.Body.translate(entities["food" + n].body, { x: -0.06, y: 0.03 });
+      Matter.Body.translate(entities["food" + n].body, { x: -0.04, y: 0.03 });
+      entities["food" + n].body.radius -= 10;
     }
 
     if (entities["food" + n].body.position.y > 722) {
-      Matter.Body.translate(entities["food" + n].body, { x: 0, y: -0.03 });
+      Matter.Body.translate(entities["food" + n].body, { x: 0, y: -0.09 });
     }
 
+    //GROUNDED PELLET
     if (
       entities.fish.body.position.y > 710 &&
       !(entities["food" + n].body.position.y > 722)
@@ -120,7 +141,7 @@ const Physics = (entities, { touches, time }) => {
     ) {
       Matter.Body.setPosition(entities["food" + i].body, {
         x: (Constants.maxWidth * (n + 1)) / 2 - Math.floor(Math.random() * 300),
-        y: Constants.maxHeight - (350 + Math.floor(Math.random() * 200)),
+        y: 5,
       });
     }
   }
