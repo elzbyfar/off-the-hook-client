@@ -244,6 +244,7 @@ class Map extends Component {
                         this.state.allLevels[index].max_time}{" "}
                       Seconds
                     </Text>
+                    <Text style={styles.objectiveItems}>1 Key</Text>
                   </View>
                 </View>
               </View>

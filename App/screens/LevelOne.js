@@ -15,6 +15,16 @@ import FishBones from "../components/FishBones";
 
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
+const backgroundImages = [
+  Images.backgroundImage1,
+  Images.backgroundImage2,
+  Images.backgroundImage3,
+  Images.backgroundImage4,
+  Images.backgroundImage5,
+  Images.backgroundImage6,
+  Images.backgroundImage7,
+];
+
 const styles = StyleSheet.create({
   gameView: {
     flex: 1,
@@ -71,13 +81,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   nextLevelButton: {
-    marginTop: 50,
+    marginTop: 30,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "#fff",
     backgroundColor: "#22a1e6",
-    opacity: 1.9,
     color: "#eee",
     height: 35,
     width: 200,
@@ -86,8 +95,26 @@ const styles = StyleSheet.create({
   nextLevelButtonText: {
     alignItems: "center",
     justifyContent: "center",
+    color: "#111",
+    fontSize: 16,
+  },
+  mainMenuButton: {
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#fff",
+    backgroundColor: "#22a1e6",
     color: "#eee",
-    fontSize: 20,
+    height: 35,
+    width: 200,
+    borderRadius: 35,
+  },
+  mainMenuButtonText: {
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#111",
+    fontSize: 16,
   },
   statsContainer: {
     marginTop: Constants.maxHeight - 100,
@@ -114,6 +141,7 @@ class LevelOne extends Component {
     this.state = {
       running: true,
       pelletPoints: 0,
+      currentLevel: null,
       characterID: null,
       levelID: null,
       userID: null,
@@ -129,12 +157,19 @@ class LevelOne extends Component {
   componentDidMount() {
     this.startInterval();
     this.setState({
+      currentLevel: this.props.route.params.currentLevel,
       levelID: this.props.route.params.currentLevel.id,
       timer: this.props.route.params.currentLevel.max_time,
       key: this.props.route.params.currentStats.key,
       userID: this.props.route.params.userID,
       characterID: this.props.route.params.characterID,
     });
+  }
+
+  componentDidUpdate() {
+    if (this.state.timer === 0) {
+      this.gameEngine.dispatch({ type: "next-level" });
+    }
   }
 
   componentWillUnmount() {
@@ -264,9 +299,9 @@ class LevelOne extends Component {
       }
 
       //GAME OVER / NEXT LEVEL
-      if (this.state.timer === 0) {
-        this.gameEngine.dispatch({ type: "next-level" });
-      }
+      // if (this.state.timer === 0) {
+      //   this.gameEngine.dispatch({ type: "next-level" });
+      // }
       if (pairs[0].bodyB.label === "Circle Body") {
         this.gameEngine.dispatch({ type: "game-over" });
       }
@@ -348,6 +383,7 @@ class LevelOne extends Component {
       });
     }
     if (event.type === "next-level") {
+      clearInterval(this.interval);
       this.setState({
         running: false,
       });
@@ -377,7 +413,10 @@ class LevelOne extends Component {
       <View style={styles.gameView}>
         <Image
           resizeMode="cover"
-          source={Images.backgroundImage1}
+          source={
+            this.state.currentLevel &&
+            backgroundImages[this.state.currentLevel.id - 1]
+          }
           style={styles.backgroundImage}
         />
         <LottieView
@@ -397,42 +436,54 @@ class LevelOne extends Component {
           onEvent={this.onEvent}
           entities={this.entities}
         />
-        {!this.state.running && (
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => {}}
-            style={styles.fullScreenButton}
-          >
-            <View style={styles.fullScreen}>
-              <Text style={styles.gameOverText}>Ouch!</Text>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={this.reset}
-                style={styles.nextLevelButton}
-              >
-                <Text style={styles.nextLevelButtonText}>Play Again</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        )}
-        {!this.state.running && this.state.timer === 0 && (
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => {}}
-            style={styles.fullScreenButton}
-          >
-            <View style={styles.fullScreen}>
-              <Text style={styles.congratulationsText}>CONGRATULATIONS!</Text>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => alert("Under Construction")}
-                style={styles.nextLevelButton}
-              >
-                <Text style={styles.nextLevelButtonText}>NEXT LEVEL</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        )}
+        {!this.state.running &&
+          (this.state.timer !== 0 ? (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {}}
+              style={styles.fullScreenButton}
+            >
+              <View style={styles.fullScreen}>
+                <Text style={styles.gameOverText}>Ouch!</Text>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => this.reset()}
+                  style={styles.nextLevelButton}
+                >
+                  <Text style={styles.nextLevelButtonText}>Play Again</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() =>
+                    this.props.navigation.push("CharacterSelect", {
+                      user: { id: this.state.userID },
+                      newUser: false,
+                    })
+                  }
+                  style={styles.mainMenuButton}
+                >
+                  <Text style={styles.mainMenuButtonText}>Main Menu</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {}}
+              style={styles.fullScreenButton}
+            >
+              <View style={styles.fullScreen}>
+                <Text style={styles.congratulationsText}>CONGRATULATIONS!</Text>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => alert("Under Construction")}
+                  style={styles.nextLevelButton}
+                >
+                  <Text style={styles.nextLevelButtonText}>NEXT LEVEL</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          ))}
         <View style={styles.statsContainer}>
           <View style={[styles.statBoxes, { marginTop: -15 }]}>
             <Text style={[styles.stats, { fontSize: 14 }]}>PELLET</Text>
@@ -469,14 +520,9 @@ class LevelOne extends Component {
                   width: 40,
                   height: 20,
                   tintColor:
-                    this.state.currentStats &&
-                    this.state.currentStats.key !== "Captured!" &&
-                    "#888",
+                    this.state.key && this.state.key !== "Captured!" && "#888",
                   opacity:
-                    this.state.currentStats &&
-                    this.state.currentStats.key !== "Captured!"
-                      ? 0.5
-                      : 1,
+                    this.state.key && this.state.key !== "Captured!" ? 0.5 : 1,
                 }}
               />
             </View>
