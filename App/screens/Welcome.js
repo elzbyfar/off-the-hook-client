@@ -18,7 +18,7 @@ import {
 } from "react-native";
 
 const validationSchema = yup.object().shape({
-  name: yup.string().label("name").required(),
+  name: yup.string().label("name").required().min(3, "Seems a bit short..."),
   password: yup
     .string()
     .label("Password")
@@ -156,7 +156,7 @@ class Welcome extends React.Component {
                       );
                   }
                 }}
-                validationSchema={validationSchema}
+                // validationSchema={validationSchema}
               >
                 {(formikProps) => (
                   <React.Fragment>
@@ -191,9 +191,11 @@ class Welcome extends React.Component {
                         secureTextEntry
                       />
                       <Text style={{ color: "#a31717", marginTop: 2 }}>
+                        {/* <Text style={{ color: "#22a1e6", marginTop: 2 }}> */}
                         {formikProps.errors.name}
                       </Text>
                       <Text style={{ color: "#a31717", marginTop: 2 }}>
+                        {/* <Text style={{ color: "#22a1e6", marginTop: 2 }}> */}
                         {formikProps.errors.password}
                       </Text>
                       {formikProps.isSubmitting ? (

@@ -50,6 +50,8 @@ class Map extends Component {
   characterID = this.props.route.params.character.id;
   characterName = this.props.route.params.character.name;
   unlockedLevels = this.props.route.params.unlockedLevels;
+  userKeys = this.props.route.params.userKeys;
+
   // currentLevel = this.props.route.params.currentLevel;
 
   componentDidMount() {
@@ -341,6 +343,7 @@ class Map extends Component {
               <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.push("LevelOne", {
+                    userKeys: this.userKeys,
                     currentLevel: this.state.currentLevel,
                     currentStats: this.state.currentStats,
                     userID: this.userID,

@@ -34,6 +34,8 @@ Constants = {
   fishHeight: 38,
 
   foodRadius: 20,
+
+  keyRadius: 22,
 };
 
 export default Constants;

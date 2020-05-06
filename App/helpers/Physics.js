@@ -113,19 +113,18 @@ const Physics = (entities, { touches, time }) => {
       });
     } else {
       Matter.Body.translate(entities["food" + n].body, { x: -0.04, y: 0.03 });
-      entities["food" + n].body.radius -= 10;
     }
 
+    //GROUNDED FOOD
     if (entities["food" + n].body.position.y > 722) {
       Matter.Body.translate(entities["food" + n].body, { x: 0, y: -0.09 });
     }
 
-    //GROUNDED PELLET
     if (
       entities.fish.body.position.y > 710 &&
       !(entities["food" + n].body.position.y > 722)
     ) {
-      Matter.Body.translate(entities["food" + n].body, { x: 0.01, y: 0 });
+      Matter.Body.translate(entities["food" + n].body, { x: 0.04, y: 0 });
     }
   }
 
@@ -145,6 +144,41 @@ const Physics = (entities, { touches, time }) => {
       });
     }
   }
+  //EAT FOOD END OF CODE
+
+  //KEY DROPS...MAYBE
+  if (entities.key.body) {
+    if (
+      Math.abs(entities.key.body.position.x - entities.fish.body.position.x) <
+      300
+    ) {
+      Matter.Body.translate(entities.key.body, { x: -0.9, y: 2.1 });
+    } else {
+      Matter.Body.translate(entities.key.body, { x: -0.9, y: 0 });
+    }
+    if (
+      Math.abs(entities.key.body.position.x - entities.fish.body.position.x) <
+        35 &&
+      Math.abs(entities.key.body.position.y - entities.fish.body.position.y) <
+        20
+    ) {
+      Matter.Body.setPosition(entities.key.body, {
+        x: -2000,
+        y: -2000,
+      });
+    }
+    if (entities.key.body.position.y > 720) {
+      Matter.Body.translate(entities.key.body, { x: 0, y: -2.1 });
+    }
+
+    if (
+      entities.fish.body.position.y > 710 &&
+      !(entities.key.body.position.y < 720)
+    ) {
+      Matter.Body.translate(entities.key.body, { x: 0, y: -2.1 });
+    }
+  }
+  //KEY DROPS END OF CODE
 
   Matter.Engine.update(engine, time.delta);
 
@@ -167,6 +201,7 @@ const Physics = (entities, { touches, time }) => {
     Matter.Body.translate(entities.floor2.body, { x: 4, y: 0 });
     Matter.Body.translate(entities.crab.body, { x: 3, y: 0 });
   }
+  //FLOOR MOVEMENT END OF CODE
 
   //FINS ANIMATION
   tick += 1;

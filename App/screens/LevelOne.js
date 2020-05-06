@@ -10,6 +10,7 @@ import Fish from "../components/Fish";
 import Food from "../components/Food";
 import Hook from "../components/Hook";
 import Crab from "../components/Crab";
+import Key from "../components/Key";
 import PurpleShark from "../components/PurpleShark";
 import FishBones from "../components/FishBones";
 
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   nextLevelButtonText: {
     alignItems: "center",
     justifyContent: "center",
-    color: "#111",
+    color: "#000",
     fontSize: 16,
   },
   mainMenuButton: {
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
   mainMenuButtonText: {
     alignItems: "center",
     justifyContent: "center",
-    color: "#111",
+    color: "#000",
     fontSize: 16,
   },
   statsContainer: {
@@ -143,6 +144,7 @@ class LevelOne extends Component {
       pelletPoints: 0,
       currentLevel: null,
       characterID: null,
+      userKeys: null,
       levelID: null,
       userID: null,
       timer: null,
@@ -163,6 +165,7 @@ class LevelOne extends Component {
       key: this.props.route.params.currentStats.key,
       userID: this.props.route.params.userID,
       characterID: this.props.route.params.characterID,
+      userKeys: this.props.route.params.userKeys,
     });
   }
 
@@ -246,21 +249,31 @@ class LevelOne extends Component {
       5,
       4,
       Constants.foodRadius,
-      { isStatic: true }
+      { isStatic: true, isSleeping: false }
     );
     let food2 = Matter.Bodies.polygon(
       (Constants.maxWidth * 5) / 2 - Math.floor(Math.random() * 300),
       5,
       4,
       Constants.foodRadius,
-      { isStatic: true }
+      { isStatic: true, isSleeping: false }
     );
     let food3 = Matter.Bodies.polygon(
       (Constants.maxWidth * 7) / 2 - Math.floor(Math.random() * 300),
       5,
       4,
       Constants.foodRadius,
-      { isStatic: true }
+      { isStatic: true, isSleeping: false }
+    );
+    let key = Matter.Bodies.polygon(
+      (Constants.maxWidth *
+        (5 + (this.state.currentLevel && this.state.currentLevel.id))) /
+        2 -
+        Math.floor(Math.random() * 300),
+      -30,
+      4,
+      Constants.keyRadius,
+      { isStatic: true, isSleeping: false }
     );
 
     //PLACE ENTITIES WITHIN MATTER.WORLD'S SCOPE
@@ -276,6 +289,7 @@ class LevelOne extends Component {
       food1,
       food2,
       food3,
+      key,
     ]);
 
     //COLLISION DETECTION
@@ -283,18 +297,38 @@ class LevelOne extends Component {
       let pairs = event.pairs;
 
       //FOOD COLLISION
-      if (pairs[0].bodyB.label === "Polygon Body") {
+      if (
+        pairs[0].bodyB.label === "Polygon Body" &&
+        pairs[0].bodyB.area < 967
+      ) {
         pairs[0].isActive = false;
         pairs[0].isStatic = false;
         this.setState((state) => ({
           pelletPoints: state.pelletPoints + 1,
         }));
       }
-      if (pairs[0].bodyA.label === "Polygon Body") {
+      if (
+        pairs[0].bodyB.label === "Polygon Body" &&
+        pairs[0].bodyB.area > 967
+      ) {
+        if (this.state.key !== "Captured!") {
+          fetch(`http://localhost:3000/api/v1/users/${this.state.userID}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              keys: this.state.userKeys + 1,
+            }),
+          })
+            .then((resp) => resp.json())
+            .then((user) => {});
+        }
         pairs[0].isActive = false;
         pairs[0].isStatic = false;
         this.setState((state) => ({
-          pelletPoints: state.pelletPoints + 1,
+          key: "Captured!",
         }));
       }
 
@@ -357,14 +391,19 @@ class LevelOne extends Component {
         colorPick: 3,
         renderer: Food,
       },
+      key: {
+        body: this.state.key && this.state.key === "Captured!" ? null : key,
+        renderer: this.state.key && this.state.key === "Captured!" ? null : Key,
+      },
     };
   };
 
   onEvent = (event) => {
     if (event.type === "game-over") {
-      this.setState({
+      this.setState((state) => ({
+        key: state.key,
         running: false,
-      });
+      }));
       clearInterval(this.interval);
       fetch("http://localhost:3000/api/v1/statistics", {
         method: "POST",
@@ -384,9 +423,10 @@ class LevelOne extends Component {
     }
     if (event.type === "next-level") {
       clearInterval(this.interval);
-      this.setState({
+      this.setState((state) => ({
+        key: state.key,
         running: false,
-      });
+      }));
     }
   };
 
@@ -399,12 +439,14 @@ class LevelOne extends Component {
   };
 
   reset = () => {
+    clearInterval(this.interval);
     this.gameEngine.swap(this.createWorld());
-    this.setState({
+    this.setState((state) => ({
+      key: state.key,
       pelletPoints: 0,
       running: true,
       timer: this.props.route.params.currentLevel.max_time,
-    });
+    }));
     this.startInterval();
   };
 
@@ -520,9 +562,11 @@ class LevelOne extends Component {
                   width: 40,
                   height: 20,
                   tintColor:
-                    this.state.key && this.state.key !== "Captured!" && "#888",
+                    this.state.key &&
+                    (this.state.key !== "Captured!" ? "#888" : null),
                   opacity:
-                    this.state.key && this.state.key !== "Captured!" ? 0.5 : 1,
+                    this.state.key &&
+                    (this.state.key !== "Captured!" ? 0.5 : 1),
                 }}
               />
             </View>

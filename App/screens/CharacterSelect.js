@@ -72,6 +72,7 @@ class CharacterSelect extends Component {
   selectionHandler = (name) => {
     if (this.state.unlockedCharacters.includes(name)) {
       this.props.navigation.push("Map", {
+        userKeys: this.state.keys,
         user: this.props.route.params.user,
         unlockedLevels: this.state.unlockedLevels,
         character: this.state.allCharacters.find((char) => char.name === name),
