@@ -30,8 +30,8 @@ Constants = {
   meatballWidth: 130,
   meatballHeight: 120,
 
-  fishWidth: 60,
-  fishHeight: 38,
+  fishWidth: 70,
+  fishHeight: 43,
 
   foodRadius: 20,
 

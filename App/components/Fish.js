@@ -22,7 +22,10 @@ export default class Fish extends Component {
       extrapolate: "clamp",
     });
 
-    let image = Images["nemo0" + this.props.pose];
+    let image =
+      Images[
+        this.props.name.split(" ").join("_").toLowerCase() + this.props.pose
+      ];
 
     return (
       <Animated.Image
@@ -37,7 +40,7 @@ export default class Fish extends Component {
           transform: [{ rotate: rotation }],
         }}
         resizeMode="contain"
-        source={Images[this.props.name.split(" ").join("_").toLowerCase()]}
+        source={image}
       ></Animated.Image>
     );
   }

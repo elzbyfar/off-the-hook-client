@@ -210,13 +210,13 @@ const Physics = (entities, { touches, time }) => {
   //FINS ANIMATION
   tick += 1;
   entities.fish.name = name;
-  // if (tick % 5 === 0) {
-  //   pose = pose + 1;
-  //   if (pose > 3) {
-  //     pose = 1;
-  //   }
-  //   entities.fish.pose = pose;
-  // }
+  if (tick % 5 === 0) {
+    pose = pose + 1;
+    if (pose > 3) {
+      pose = 1;
+    }
+    entities.fish.pose = pose;
+  }
 
   //COLOR CHANGE
   if (tick % 7 === 0) {
