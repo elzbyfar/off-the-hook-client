@@ -41,13 +41,14 @@ class Map extends Component {
       characterStats: null,
       allLevels: null,
       characterName: null,
-      characterID: null,
+      character: null,
       active: 0,
     };
   }
 
+  user = this.props.route.params.user;
   userID = this.props.route.params.user.id;
-  characterID = this.props.route.params.character.id;
+  character = this.props.route.params.character;
   characterName = this.props.route.params.character.name;
   unlockedLevels = this.props.route.params.unlockedLevels;
   userKeys = this.props.route.params.userKeys;
@@ -70,11 +71,11 @@ class Map extends Component {
 
     this.setState({
       characterName: this.characterName,
-      characterID: this.characterID,
+      character: this.character,
       unlockedLevels: this.unlockedLevels,
     });
 
-    fetch(`http://localhost:3000/api/v1/characters/${this.characterID}`, {
+    fetch(`http://localhost:3000/api/v1/characters/${this.character.id}`, {
       method: "GET",
     })
       .then((resp) => resp.json())
@@ -346,8 +347,9 @@ class Map extends Component {
                     userKeys: this.userKeys,
                     currentLevel: this.state.currentLevel,
                     currentStats: this.state.currentStats,
-                    userID: this.userID,
-                    characterID: this.state.characterID,
+                    user: this.user,
+                    character: this.state.character,
+                    allLevels: this.state.allLevels,
                   })
                 }
                 activeOpacity={0.6}

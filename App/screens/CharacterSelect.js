@@ -74,7 +74,7 @@ class CharacterSelect extends Component {
       this.props.navigation.push("Map", {
         userKeys: this.state.keys,
         user: this.props.route.params.user,
-        unlockedLevels: this.state.unlockedLevels,
+        // unlockedLevels: this.state.unlockedLevels,
         character: this.state.allCharacters.find((char) => char.name === name),
         currentLevel: this.state.allLevels.find(
           (level) =>

@@ -68,8 +68,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "black",
-    opacity: 0.6,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -143,10 +142,11 @@ class LevelOne extends Component {
       running: true,
       pelletPoints: 0,
       currentLevel: null,
-      characterID: null,
+      allLevels: null,
+      character: null,
       userKeys: null,
       levelID: null,
-      userID: null,
+      user: null,
       timer: null,
       key: null,
     };
@@ -163,9 +163,10 @@ class LevelOne extends Component {
       levelID: this.props.route.params.currentLevel.id,
       timer: this.props.route.params.currentLevel.max_time,
       key: this.props.route.params.currentStats.key,
-      userID: this.props.route.params.userID,
-      characterID: this.props.route.params.characterID,
+      user: this.props.route.params.user,
+      character: this.props.route.params.character,
       userKeys: this.props.route.params.userKeys,
+      allLevels: this.props.route.params.allLevels,
     });
   }
 
@@ -174,17 +175,35 @@ class LevelOne extends Component {
       this.gameEngine.dispatch({ type: "next-level" });
     }
   }
-
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-  nextLevel = () => {
-    if (this.state.pelletPoints >= 100) {
-      this.setState({
-        running: false,
-      });
-    }
+  // nextLevel = () => {
+  //   this.setState((state) => ({
+  //     key: this.state.allLevels[state.currentLevel.id].key
+  //       ? "Captured!"
+  //       : "Not Captured",
+  //     pelletPoints: 0,
+  //     running: true,
+  //     timer: this.state.allLevels[state.currentLevel.id].max_time,
+  //     currentLevel: this.state.allLevels[state.currentLevel.id],
+  //   }));
+  // };
+
+  // newLevel = () => {
+  //   this.gameEngine.swap(this.createWorld());
+  //   this.startInterval();
+  // };
+
+  selectLevel = () => {
+    clearInterval(this.interval);
+    this.props.navigation.push("Map", {
+      userKeys: this.state.userKeys,
+      user: this.state.user,
+      character: this.state.character,
+      currentLevel: this.state.currentLevel,
+    });
   };
 
   createWorld = () => {
@@ -312,7 +331,7 @@ class LevelOne extends Component {
         pairs[0].bodyB.area > 967
       ) {
         if (this.state.key !== "Captured!") {
-          fetch(`http://localhost:3000/api/v1/users/${this.state.userID}`, {
+          fetch(`http://localhost:3000/api/v1/users/${this.state.user.id}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -399,11 +418,13 @@ class LevelOne extends Component {
   };
 
   onEvent = (event) => {
-    if (event.type === "game-over") {
+    if (event.type === "game-over" || event.type === "try-again") {
       this.setState((state) => ({
         key: state.key,
         running: false,
+        timer: this.props.route.params.currentLevel.max_time,
       }));
+
       clearInterval(this.interval);
       fetch("http://localhost:3000/api/v1/statistics", {
         method: "POST",
@@ -415,9 +436,9 @@ class LevelOne extends Component {
           pellet_points: this.state.pelletPoints,
           captured_key: this.state.key === "Captured!" ? true : false,
           completed: false,
-          user_id: this.state.userID,
+          user_id: this.state.user.id,
           level_id: this.state.levelID,
-          character_id: this.state.characterID,
+          character_id: this.state.character.id,
         }),
       });
     }
@@ -439,7 +460,8 @@ class LevelOne extends Component {
   };
 
   reset = () => {
-    clearInterval(this.interval);
+    // clearInterval(this.interval);
+    this.startInterval();
     this.gameEngine.swap(this.createWorld());
     this.setState((state) => ({
       key: state.key,
@@ -447,10 +469,10 @@ class LevelOne extends Component {
       running: true,
       timer: this.props.route.params.currentLevel.max_time,
     }));
-    this.startInterval();
   };
 
   render() {
+    // console.log(this.state.currentLevel);
     return (
       <View style={styles.gameView}>
         <Image
@@ -498,7 +520,7 @@ class LevelOne extends Component {
                   activeOpacity={0.9}
                   onPress={() =>
                     this.props.navigation.push("CharacterSelect", {
-                      user: { id: this.state.userID },
+                      user: { id: this.state.user.id },
                       newUser: false,
                     })
                   }
@@ -515,14 +537,38 @@ class LevelOne extends Component {
               style={styles.fullScreenButton}
             >
               <View style={styles.fullScreen}>
-                <Text style={styles.congratulationsText}>CONGRATULATIONS!</Text>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={() => alert("Under Construction")}
-                  style={styles.nextLevelButton}
-                >
-                  <Text style={styles.nextLevelButtonText}>NEXT LEVEL</Text>
-                </TouchableOpacity>
+                <Text style={styles.congratulationsText}>
+                  {this.state.pelletPoints >=
+                    this.state.currentLevel.pellet_points_needed &&
+                  this.state.key === "Captured!"
+                    ? "CONGRATULATIONS!"
+                    : this.state.pelletPoints <
+                      this.state.currentLevel.pellet_points_needed
+                    ? `You need ${
+                        this.state.currentLevel.pellet_points_needed -
+                        this.state.pelletPoints
+                      } Pellet Points to complete this level.`
+                    : "Capture The Missing Key"}
+                </Text>
+                {this.state.pelletPoints >=
+                  this.state.currentLevel.pellet_points_needed &&
+                this.state.key === "Captured!" ? (
+                  <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => this.selectLevel()}
+                    style={styles.nextLevelButton}
+                  >
+                    <Text style={styles.nextLevelButtonText}>NEXT LEVEL</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => this.reset()}
+                    style={styles.nextLevelButton}
+                  >
+                    <Text style={styles.nextLevelButtonText}>TRY AGAIN</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </TouchableOpacity>
           ))}
