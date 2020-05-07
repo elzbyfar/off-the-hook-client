@@ -1,16 +1,20 @@
 import Matter from "matter-js";
 import Constants from "./Constants";
+import Images from "../assets/Images";
 
 let tick = 0;
 let pose = 1;
 let colorPick = 0;
 let crabPose = 1;
+let images = ["nemo", "ignatius", "tummy_rub", "ariana"];
+
 let purpleSharkPose = 1;
 
 const Physics = (entities, { touches, time }) => {
   let engine = entities.physics.engine;
   let world = entities.physics.world;
   let fish = entities.fish.body;
+  let name = entities.physics.name;
   let hadTouches = false;
 
   //FISH MOVEMENT (VERTICAL)
@@ -205,13 +209,14 @@ const Physics = (entities, { touches, time }) => {
 
   //FINS ANIMATION
   tick += 1;
-  if (tick % 5 === 0) {
-    pose = pose + 1;
-    if (pose > 3) {
-      pose = 1;
-    }
-    entities.fish.pose = pose;
-  }
+  entities.fish.name = name;
+  // if (tick % 5 === 0) {
+  //   pose = pose + 1;
+  //   if (pose > 3) {
+  //     pose = 1;
+  //   }
+  //   entities.fish.pose = pose;
+  // }
 
   //COLOR CHANGE
   if (tick % 7 === 0) {

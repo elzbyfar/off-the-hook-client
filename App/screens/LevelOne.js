@@ -78,7 +78,10 @@ const styles = StyleSheet.create({
   },
   congratulationsText: {
     color: "white",
-    fontSize: 24,
+    fontSize: 22,
+    textAlign: "center",
+    width: 300,
+    flexWrap: "wrap",
   },
   nextLevelButton: {
     marginTop: 30,
@@ -139,7 +142,6 @@ class LevelOne extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      running: true,
       pelletPoints: 0,
       currentLevel: null,
       allLevels: null,
@@ -148,6 +150,7 @@ class LevelOne extends Component {
       levelID: null,
       user: null,
       timer: null,
+      running: true,
       key: null,
     };
     this.gameEngine = null;
@@ -171,7 +174,7 @@ class LevelOne extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.timer === 0) {
+    if (this.state.timer === 0 && this.state.running) {
       this.gameEngine.dispatch({ type: "next-level" });
     }
   }
@@ -331,18 +334,20 @@ class LevelOne extends Component {
         pairs[0].bodyB.area > 967
       ) {
         if (this.state.key !== "Captured!") {
-          fetch(`http://localhost:3000/api/v1/users/${this.state.user.id}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({
-              keys: this.state.userKeys + 1,
-            }),
-          })
-            .then((resp) => resp.json())
-            .then((user) => {});
+          if (this.state.user) {
+            fetch(`http://localhost:3000/api/v1/users/${this.state.user.id}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({
+                keys: this.state.userKeys + 1,
+              }),
+            })
+              .then((resp) => resp.json())
+              .then((user) => {});
+          }
         }
         pairs[0].isActive = false;
         pairs[0].isStatic = false;
@@ -362,8 +367,17 @@ class LevelOne extends Component {
 
     //RETURN ENTITIES TO RENDER ON SCREEN
     return {
-      physics: { engine: engine, world: world },
-      fish: { body: fish, pose: 1, renderer: Fish },
+      physics: {
+        engine: engine,
+        world: world,
+        name: this.props.route.params.character.name,
+      },
+      fish: {
+        body: fish,
+        pose: 1,
+        name: "",
+        renderer: Fish,
+      },
 
       floor1: {
         body: floor1,
@@ -422,25 +436,25 @@ class LevelOne extends Component {
       this.setState((state) => ({
         key: state.key,
         running: false,
-        timer: this.props.route.params.currentLevel.max_time,
       }));
-
       clearInterval(this.interval);
-      fetch("http://localhost:3000/api/v1/statistics", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          pellet_points: this.state.pelletPoints,
-          captured_key: this.state.key === "Captured!" ? true : false,
-          completed: false,
-          user_id: this.state.user.id,
-          level_id: this.state.levelID,
-          character_id: this.state.character.id,
-        }),
-      });
+      if (this.state.user) {
+        fetch("http://localhost:3000/api/v1/statistics", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            pellet_points: this.state.pelletPoints,
+            captured_key: this.state.key === "Captured!" ? true : false,
+            completed: false,
+            user_id: this.state.user.id,
+            level_id: this.state.levelID,
+            character_id: this.state.character.id,
+          }),
+        });
+      }
     }
     if (event.type === "next-level") {
       clearInterval(this.interval);
@@ -460,8 +474,7 @@ class LevelOne extends Component {
   };
 
   reset = () => {
-    // clearInterval(this.interval);
-    this.startInterval();
+    clearInterval(this.interval);
     this.gameEngine.swap(this.createWorld());
     this.setState((state) => ({
       key: state.key,
@@ -469,10 +482,10 @@ class LevelOne extends Component {
       running: true,
       timer: this.props.route.params.currentLevel.max_time,
     }));
+    this.startInterval();
   };
 
   render() {
-    // console.log(this.state.currentLevel);
     return (
       <View style={styles.gameView}>
         <Image
@@ -544,31 +557,31 @@ class LevelOne extends Component {
                     ? "CONGRATULATIONS!"
                     : this.state.pelletPoints <
                       this.state.currentLevel.pellet_points_needed
-                    ? `You need ${
+                    ? `Sorry.\nYou needed ${
                         this.state.currentLevel.pellet_points_needed -
                         this.state.pelletPoints
-                      } Pellet Points to complete this level.`
-                    : "Capture The Missing Key"}
+                      } more Pellet Points to complete this level.`
+                    : "Sorry.\nCapture The Missing Key to complete this level."}
                 </Text>
-                {this.state.pelletPoints >=
-                  this.state.currentLevel.pellet_points_needed &&
-                this.state.key === "Captured!" ? (
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => this.selectLevel()}
-                    style={styles.nextLevelButton}
-                  >
-                    <Text style={styles.nextLevelButtonText}>NEXT LEVEL</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => this.reset()}
-                    style={styles.nextLevelButton}
-                  >
-                    <Text style={styles.nextLevelButtonText}>TRY AGAIN</Text>
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={
+                    this.state.pelletPoints >=
+                      this.state.currentLevel.pellet_points_needed &&
+                    this.state.key === "Captured!"
+                      ? this.selectLevel
+                      : this.reset
+                  }
+                  style={styles.nextLevelButton}
+                >
+                  <Text style={styles.nextLevelButtonText}>
+                    {this.state.pelletPoints >=
+                      this.state.currentLevel.pellet_points_needed &&
+                    this.state.key === "Captured!"
+                      ? "NEXT LEVEL"
+                      : "TRY AGAIN"}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           ))}

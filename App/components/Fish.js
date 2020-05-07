@@ -37,7 +37,7 @@ export default class Fish extends Component {
           transform: [{ rotate: rotation }],
         }}
         resizeMode="contain"
-        source={image}
+        source={Images[this.props.name.split(" ").join("_").toLowerCase()]}
       ></Animated.Image>
     );
   }
