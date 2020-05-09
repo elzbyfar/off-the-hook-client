@@ -32,51 +32,49 @@ const SignIn = ({ navigation, route }) => {
       <Formik
         initialValues={{ name: "", password: "" }}
         onSubmit={(values, actions) => {
-          if (this.state.formType === "create") {
-            fetch("http://localhost:3000/api/v1/users", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-              body: JSON.stringify(values),
-            })
-              .then((resp) => resp.json())
-              .then((user) => {
-                this.setState({
-                  user: {
-                    id: user.id,
-                    name: user.name,
-                  },
-                });
+          // if (this.state.formType === "create") {
+          fetch("http://localhost:3000/api/v1/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(values),
+          })
+            .then((resp) => resp.json())
+            // .then((user) => {
+            //   this.setState({
+            //     user: {
+            //       id: user.id,
+            //       name: user.name,
+            //     },
+            //   });
+            // })
+            .then((user) =>
+              navigation.push("CharacterSelect", {
+                user: user,
               })
-              .then(() =>
-                this.props.navigation.push("CharacterSelect", {
-                  user: this.state.user,
-                })
-              );
-          } else if (this.state.formType === "find") {
-            fetch("http://localhost:3000/api/v1/users", {
-              method: "GET",
-            })
-              .then((resp) => resp.json())
-              .then((users) => {
-                let user = users.find((user) => {
-                  return user.name === values.name;
-                });
-                this.setState({
-                  user: {
-                    id: user.id,
-                    name: user.name,
-                  },
-                });
-              })
-              .then(() =>
-                this.props.navigation.push("CharacterSelect", {
-                  user: this.state.user,
-                })
-              );
-          }
+            );
+          // } else if (this.state.formType === "find") {
+          //   fetch("http://localhost:3000/api/v1/users", {
+          //     method: "GET",
+          //   })
+          //     .then((resp) => resp.json())
+          //     .then((users) => {
+          //       let user = users.find((user) => {
+          //         return user.name === values.name;
+          //       });
+          //       () =>
+          //         navigation.push("CharacterSelect", {
+          //           user: user,
+          //         });
+          //     });
+          // .then(() =>
+          //   navigation.push("CharacterSelect", {
+          //     user: user,
+          //   })
+          // );
+          // }
         }}
         validationSchema={validationSchema}
       >
@@ -85,9 +83,10 @@ const SignIn = ({ navigation, route }) => {
             <View style={styles.formContainer}>
               <TextInput
                 placeholder={
-                  this.state.formType === "find"
-                    ? "enter your name"
-                    : "create name"
+                  // this.state.formType === "find"
+                  // ? "enter your name"
+                  // :
+                  "create name"
                 }
                 placeholderTextColor="#ddd"
                 style={styles.formInput}
@@ -103,9 +102,10 @@ const SignIn = ({ navigation, route }) => {
             >
               <TextInput
                 placeholder={
-                  this.state.formType === "find"
-                    ? "enter your password"
-                    : "create password"
+                  // this.state.formType === "find"
+                  //   ? "enter your password"
+                  // :
+                  "create password"
                 }
                 placeholderTextColor="#ddd"
                 style={styles.formInput}
@@ -134,9 +134,11 @@ const SignIn = ({ navigation, route }) => {
                       ]}
                     >
                       <Text style={styles.submitButtonText}>
-                        {this.state.formType === "find"
-                          ? "Sign In"
-                          : "Create New Account"}
+                        {/* {this.state.formType === "find"
+                          ? "Sign In" */}
+                        {/* :  */}
+                        "Create New Account"
+                        {/* } */}
                       </Text>
                     </View>
                   </TouchableOpacity>

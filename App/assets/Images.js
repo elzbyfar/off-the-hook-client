@@ -14,6 +14,9 @@ export default Images = {
 
   doug: require("./img/doug.png"),
   ariana: require("./img/ariana.png"),
+  ariana1: require("./img/ariana1.png"),
+  ariana2: require("./img/ariana2.png"),
+  ariana3: require("./img/ariana3.png"),
   ignatius: require("./img/ignatius.png"),
   loquacious: require("./img/loquacious.png"),
   tummy_rub: require("./img/tummy_rub.png"),

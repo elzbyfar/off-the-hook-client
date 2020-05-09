@@ -3,6 +3,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Welcome from "../screens/Welcome";
+import SignIn from "../screens/SignIn";
+import SignUp from "../screens/SignUp";
+
 import CharacterSelect from "../screens/CharacterSelect";
 import Map from "../screens/Map";
 import LevelOne from "../screens/LevelOne";
@@ -15,6 +18,8 @@ const GameStackScreen = () => (
     }}
   >
     <GameStack.Screen name="Welcome" component={Welcome} />
+    <GameStack.Screen name="SignIn" component={SignIn} />
+    <GameStack.Screen name="SignUp" component={SignUp} />
     <GameStack.Screen name="CharacterSelect" component={CharacterSelect} />
     <GameStack.Screen name="Map" component={Map} />
     <GameStack.Screen name="LevelOne" component={LevelOne} />
