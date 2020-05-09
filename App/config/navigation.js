@@ -26,7 +26,16 @@ const GameStackScreen = () => (
         headerShown: false,
       }}
     />
-    <GameStack.Screen name="SignIn" component={SignIn} />
+    <GameStack.Screen
+      name="SignIn"
+      component={SignIn}
+      options={{
+        title: "Sign In",
+        headerStyle: { backgroundColor: "#eee" },
+        headerTitleStyle: { color: "#037CFF", fontWeight: "600" },
+        headerBackTitleStyle: { color: "#037CFF" },
+      }}
+    />
     <GameStack.Screen
       name="SignUp"
       component={SignUp}
