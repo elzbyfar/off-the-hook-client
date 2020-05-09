@@ -1,6 +1,8 @@
 import { Dimensions } from "react-native";
 
 Constants = {
+  API_BASE: "http://localhost:3000/api/v1/",
+
   maxWidth: Dimensions.get("window").width,
   maxHeight: Dimensions.get("window").height,
   gapSize: 300,

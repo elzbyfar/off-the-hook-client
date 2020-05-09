@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
+import MakePost from "../helpers/MakePost";
 import Images from "../assets/Images";
 import styles from "../styles/SignUpStyles.js";
 import LottieView from "lottie-react-native";
@@ -12,61 +13,43 @@ import {
   StatusBar,
   SafeAreaView,
   TouchableOpacity,
-  Dimensions,
-  Animated,
+  Image,
   ActivityIndicator,
 } from "react-native";
 
 const validationSchema = yup.object().shape({
   name: yup.string().label("name").required(),
-  password: yup
-    .string()
-    .label("Password")
-    .required()
-    .min(3, "Seems a bit short..."),
+  password: yup.string().label("Password").required(),
 });
 
-const SignUp = ({ navigation, route }) => {
+const SignUp = ({ navigation }) => {
   return (
     <View style={styles.SignUpView}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
-        <Animated.View>
-          <Animated.Image
-            style={{
-              width: 150,
-              height: 150,
-              marginTop: -180,
-              marginBottom: 10,
-              zIndex: -10,
-            }}
+        <View>
+          <Image
+            style={styles.logo}
             source={Images.logo}
             resizeMode="contain"
           />
-        </Animated.View>
+        </View>
         <Formik
           initialValues={{ name: "", password: "" }}
-          onSubmit={(values, actions) => {
-            fetch("http://localhost:3000/api/v1/users", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-              body: JSON.stringify({
+          onSubmit={(values) =>
+            MakePost(
+              "users",
+              {
                 ...values,
                 unlocked_characters: ["Nemo"],
                 unlocked_levels: ["Level One"],
-                keys: 0,
-              }),
-            })
-              .then((resp) => resp.json())
-              .then((user) => {
-                navigation.push("CharacterSelect", {
-                  user: user,
-                });
-              });
-          }}
+                keys: 1,
+              },
+              (user) => {
+                navigation.push("CharacterSelect", { user });
+              }
+            )
+          }
           validationSchema={validationSchema}
         >
           {(formikProps) => (
@@ -87,23 +70,14 @@ const SignUp = ({ navigation, route }) => {
                 }}
               >
                 <TextInput
-                  placeholder={
-                    // this.state.formType === "find"
-                    //   ? "enter your password"
-                    // :
-                    "create password"
-                  }
+                  placeholder={"create password"}
                   placeholderTextColor="#ddd"
                   style={styles.formInput}
                   onChangeText={formikProps.handleChange("password")}
                   secureTextEntry
                 />
-                <Text style={{ color: "#a31717", marginTop: 2 }}>
-                  {formikProps.errors.name}
-                </Text>
-                <Text style={{ color: "#a31717", marginTop: 2 }}>
-                  {formikProps.errors.password}
-                </Text>
+                <Text style={styles.errors}>{formikProps.errors.name}</Text>
+                <Text style={styles.errors}>{formikProps.errors.password}</Text>
                 {formikProps.isSubmitting ? (
                   <ActivityIndicator />
                 ) : (
@@ -113,28 +87,10 @@ const SignUp = ({ navigation, route }) => {
                       activeOpacity={0.8}
                       onPress={formikProps.handleSubmit}
                     >
-                      <View
-                        style={[
-                          styles.submitButton,
-                          { width: 150, marginBottom: 5 },
-                        ]}
-                      >
-                        <Text style={styles.submitButtonText}>
-                          {/* {this.state.formType === "find"
-                          ? "Sign In" */}
-                          {/* :  */}
-                          Create New Account
-                          {/* } */}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => navigation.push("Welcome")}
-                    >
                       <View style={styles.submitButton}>
-                        <Text style={styles.submitButtonText}>{"Back"}</Text>
+                        <Text style={styles.submitButtonText}>
+                          Create New Account
+                        </Text>
                       </View>
                     </TouchableOpacity>
                   </View>

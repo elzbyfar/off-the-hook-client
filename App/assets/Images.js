@@ -1,5 +1,6 @@
 export default Images = {
   logo: require("./img/off-the-hook.png"),
+  back: require("./img/back.png"),
   sandFloor: require("./img/faded-sand2.png"),
   backgroundImage1: require("./img/background09.jpg"),
   backgroundImage2: require("./img/background37.jpg"),
