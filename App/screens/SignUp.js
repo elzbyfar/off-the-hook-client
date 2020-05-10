@@ -1,10 +1,10 @@
 import React from "react";
-import MakePost from "../helpers/MakePost";
+import ValidationSchema from "../helpers/Validation";
+import LottieView from "lottie-react-native";
+import MakeFetch from "../helpers/MakeFetch";
 import Images from "../assets/Images";
 import styles from "../styles/SignUpStyles.js";
-import LottieView from "lottie-react-native";
 import { Formik } from "formik";
-import * as yup from "yup";
 
 import {
   View,
@@ -17,10 +17,14 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-const validationSchema = yup.object().shape({
-  name: yup.string().label("name").required(),
-  password: yup.string().label("Password").required(),
-});
+const newUserObj = (values) => {
+  return {
+    ...values,
+    unlocked_characters: ["Nemo"],
+    unlocked_levels: ["Level One"],
+    keys: 1,
+  };
+};
 
 const SignUp = ({ navigation }) => {
   return (
@@ -37,20 +41,11 @@ const SignUp = ({ navigation }) => {
         <Formik
           initialValues={{ name: "", password: "" }}
           onSubmit={(values) =>
-            MakePost(
-              "users",
-              {
-                ...values,
-                unlocked_characters: ["Nemo"],
-                unlocked_levels: ["Level One"],
-                keys: 1,
-              },
-              (user) => {
-                navigation.push("CharacterSelect", { user });
-              }
-            )
+            MakeFetch("users", "POST", newUserObj(values), (user) => {
+              navigation.push("CharacterSelect", { user: user, newUser: true });
+            })
           }
-          validationSchema={validationSchema}
+          validationSchema={ValidationSchema}
         >
           {(formikProps) => (
             <React.Fragment>
@@ -63,12 +58,7 @@ const SignUp = ({ navigation }) => {
                   autoFocus
                 />
               </View>
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
+              <View>
                 <TextInput
                   placeholder={"create password"}
                   placeholderTextColor="#ddd"

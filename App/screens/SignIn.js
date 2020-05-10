@@ -1,9 +1,10 @@
 import React from "react";
+import ValidationSchema from "../helpers/Validation";
+import LottieView from "lottie-react-native";
+import MakeGet from "../helpers/MakeGet";
 import Images from "../assets/Images";
 import styles from "../styles/SignInStyles.js";
-import LottieView from "lottie-react-native";
 import { Formik } from "formik";
-import * as yup from "yup";
 
 import {
   View,
@@ -15,11 +16,6 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-
-const validationSchema = yup.object().shape({
-  name: yup.string().label("name").required(),
-  password: yup.string().label("Password").required(),
-});
 
 const SignIn = ({ navigation }) => {
   return (
@@ -36,18 +32,15 @@ const SignIn = ({ navigation }) => {
         <Formik
           initialValues={{ name: "", password: "" }}
           onSubmit={(values) => {
-            fetch("http://localhost:3000/api/v1/users", {
-              method: "GET",
-            })
-              .then((resp) => resp.json())
-              .then((users) => {
-                let user = users.find((user) => {
-                  return user.name === values.name;
-                });
-                () => navigation.push("CharacterSelect", { user });
+            MakeGet("users", (users) => {
+              let user = users.find((user) => {
+                return user.name === values.name;
               });
+              console.log(user);
+              navigation.push("CharacterSelect", { user, newUser: false });
+            });
           }}
-          validationSchema={validationSchema}
+          validationSchema={ValidationSchema}
         >
           {(formikProps) => (
             <React.Fragment>

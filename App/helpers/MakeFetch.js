@@ -1,8 +1,8 @@
 import Constants from "./Constants";
 
-const MakePost = (urlSlug, stringifyObj, thenFunction) => {
+const MakeFetch = (urlSlug, meth, stringifyObj, thenFunction) => {
   fetch(`${Constants.API_BASE}/${urlSlug}`, {
-    method: "POST",
+    method: meth,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -10,6 +10,6 @@ const MakePost = (urlSlug, stringifyObj, thenFunction) => {
     body: JSON.stringify(stringifyObj),
   })
     .then((resp) => resp.json())
-    .then(thenFunction);
+    .then(thenFunction ? thenFunction : null);
 };
-export default MakePost;
+export default MakeFetch;

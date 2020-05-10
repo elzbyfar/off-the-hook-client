@@ -46,9 +46,27 @@ const GameStackScreen = () => (
         headerBackTitleStyle: { color: "#037CFF" },
       }}
     />
-    <GameStack.Screen name="CharacterSelect" component={CharacterSelect} />
-    <GameStack.Screen name="Map" component={Map} />
-    <GameStack.Screen name="LevelOne" component={LevelOne} />
+    <GameStack.Screen
+      name="CharacterSelect"
+      component={CharacterSelect}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <GameStack.Screen
+      name="Map"
+      component={Map}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <GameStack.Screen
+      name="LevelOne"
+      component={LevelOne}
+      options={{
+        headerShown: false,
+      }}
+    />
   </GameStack.Navigator>
 );
 

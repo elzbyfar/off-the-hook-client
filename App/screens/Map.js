@@ -1,21 +1,9 @@
 import React, { Component } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Animated,
-} from "react-native";
+import Constants from "../helpers/Constants";
 import Images from "../assets/Images";
 import styles from "../styles/MapStyles.js";
-import {
-  PinchGestureHandler,
-  PanGestureHandler,
-} from "react-native-gesture-handler";
 
-import Constants from "../helpers/Constants";
+import { View, TouchableOpacity, Image, Text, ScrollView } from "react-native";
 
 const backgroundImages = [
   Images.backgroundImage1,
@@ -46,14 +34,11 @@ class Map extends Component {
     };
   }
 
-  user = this.props.route.params.user;
-  userID = this.props.route.params.user.id;
-  character = this.props.route.params.character;
-  characterName = this.props.route.params.character.name;
-  unlockedLevels = this.props.route.params.unlockedLevels;
-  userKeys = this.props.route.params.userKeys;
-
-  // currentLevel = this.props.route.params.currentLevel;
+  user = this.props.route.params.selection.user;
+  userID = this.props.route.params.selection.user.id;
+  character = this.props.route.params.selection.selectedCharacter;
+  characterName = this.props.route.params.selection.selectedCharacter.name;
+  userKeys = this.props.route.params.selection.userKeys;
 
   componentDidMount() {
     fetch("http://localhost:3000/api/v1/levels/", {
@@ -72,7 +57,7 @@ class Map extends Component {
     this.setState({
       characterName: this.characterName,
       character: this.character,
-      unlockedLevels: this.unlockedLevels,
+      // unlockedLevels: this.unlockedLevels,
     });
 
     fetch(`http://localhost:3000/api/v1/characters/${this.character.id}`, {

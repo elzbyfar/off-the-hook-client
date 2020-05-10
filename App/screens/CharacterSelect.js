@@ -1,126 +1,125 @@
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import styles from "../styles/CharacterSelectStyles.js";
 import LottieView from "lottie-react-native";
+import styles from "../styles/CharacterSelectStyles.js";
 import Images from "../assets/Images";
-import { Render } from "matter-js";
+import MakeGet from "../helpers/MakeGet";
+import MakeFetch from "../helpers/MakeFetch";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StatusBar,
+  SafeAreaView,
+} from "react-native";
 
 class CharacterSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
       unlockedCharacters: [],
-      unlockedLevels: [],
-      allCharacters: [],
-      allLevels: [],
+      characters: [],
+      levels: [],
+      user: null,
       keys: null,
     };
   }
 
-  userID = this.props.route.params.user.id;
+  user = this.props.route.params.user;
+  newUser = this.props.route.params.newUser;
+
+  newUserObj = {
+    pellet_points: 0,
+    captured_key: false,
+    completed: false,
+    user_id: this.user.id,
+    level_id: 1,
+    character_id: 1,
+  };
 
   componentDidMount() {
-    if (this.props.route.params.newUser) {
-      fetch("http://localhost:3000/api/v1/statistics", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          pellet_points: 0,
-          captured_key: false,
-          completed: false,
-          user_id: this.userID,
-          level_id: 1,
-          character_id: 1,
-        }),
-      });
+    //Initiate Character Stats
+    if (this.newUser) {
+      MakeFetch("statistics", "POST", newUserObj, this.setupUser(this.user));
     }
-    fetch(`http://localhost:3000/api/v1/users/${this.userID}`, {
-      method: "GET",
-    })
-      .then((resp) => resp.json())
-      .then((user) => {
-        this.setState((state) => ({
-          unlockedCharacters: user.unlocked_characters,
-          unlockedLevels: user.unlocked_levels,
-          keys: user.keys,
-        }));
-      });
 
-    fetch("http://localhost:3000/api/v1/characters", {
-      method: "GET",
-    })
-      .then((resp) => resp.json())
-      .then((characters) => {
-        this.setState({
-          allCharacters: characters,
-        });
-      });
-    fetch("http://localhost:3000/api/v1/levels", {
-      method: "GET",
-    })
-      .then((resp) => resp.json())
-      .then((levels) => {
-        this.setState({
-          allLevels: levels,
-        });
-      });
+    //Get User & Set State
+    MakeGet(`users/${this.user.id}`, this.setupUser(this.user));
+
+    //Get Characters & Set State
+    MakeGet("characters", (characters) => {
+      this.setState({ characters });
+    });
+
+    //Get Levels & Set State
+    MakeGet("levels", (levels) => {
+      this.setState({ levels });
+    });
   }
 
+  //Name Formatter
+  formatName = (name) => {
+    return name.split(" ").join("_").toLowerCase();
+  };
+
+  //Unlocked Verifier
+  isUnlocked = (name) => {
+    return this.state.unlockedCharacters.includes(name);
+  };
+
+  //Set User State
+  setupUser = (user) => {
+    this.setState({
+      unlockedCharacters: user.unlocked_characters,
+      keys: user.keys,
+      user: this.user,
+    });
+  };
+
+  //Unlock Character & Update Keys
+  unlockCharacterAndUpdateKeys = (name) => {
+    this.setState((state) => ({
+      keys: state.keys - 1,
+      unlockedCharacters: [...state.unlockedCharacters, name],
+    }));
+  };
+
+  //Setup Character Boxes
+  setupCharacterBoxes = () => {
+    let boxes = this.state.characters.map((char, index) => {
+      return this.showCharacterImage(char.name, index);
+    });
+    return boxes;
+  };
+
+  //Handle Character Selection
   selectionHandler = (name) => {
-    if (this.state.unlockedCharacters.includes(name)) {
+    if (this.isUnlocked(name)) {
+      //Choose Character & Go To Level Selection
       this.props.navigation.push("Map", {
-        userKeys: this.state.keys,
-        user: this.props.route.params.user,
-        // unlockedLevels: this.state.unlockedLevels,
-        character: this.state.allCharacters.find((char) => char.name === name),
-        currentLevel: this.state.allLevels.find(
-          (level) =>
-            level.level_name ===
-            this.state.unlockedLevels[this.state.unlockedLevels.length - 1]
-        ),
-      });
-    } else if (
-      !this.state.unlockedCharacters.includes(name) &&
-      this.state.keys > 0
-    ) {
-      fetch(`http://localhost:3000/api/v1/users/${this.userID}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+        selection: {
+          ...this.state,
+          selectedCharacter: this.state.characters.find(
+            (char) => char.name === name
+          ),
         },
-        body: JSON.stringify({
-          unlocked_characters: [...this.state.unlockedCharacters, name],
-          keys: this.state.keys - 1,
-        }),
       });
-      this.setState((state) => ({
-        keys: state.keys - 1,
-        unlockedCharacters: [...state.unlockedCharacters, name],
-      }));
-      this.state.unlockedLevels.map((level, index) => {
-        fetch("http://localhost:3000/api/v1/statistics", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            pellet_points: 0,
-            captured_key: false,
-            completed: false,
-            user_id: this.userID,
-            level_id: index + 1,
-            character_id: this.state.allCharacters.find(
-              (char) => char.name === name
-            ).id,
-          }),
-        });
+    } else if (!this.isUnlocked(name) && this.state.keys > 0) {
+      //Unlock Character
+      MakeFetch(`/users/${this.user.id}`, "PATCH", {
+        unlocked_characters: [...this.state.unlockedCharacters, name],
+        keys: this.state.keys - 1,
+      });
+
+      this.unlockCharacterAndUpdateKeys(name);
+
+      MakeFetch("statistics", "POST", {
+        ...this.newUserObj,
+        character_id: this.state.characters.find((char) => char.name === name)
+          .id,
       });
     } else {
+      //Reject Access
       alert(
         name +
           " is trapped! Find a key to unlock " +
@@ -129,7 +128,8 @@ class CharacterSelect extends Component {
     }
   };
 
-  renderCharacterImage = (name, index) => {
+  //Show Single Character Image
+  showCharacterImage = (name, index) => {
     return (
       <TouchableOpacity
         key={index}
@@ -139,21 +139,22 @@ class CharacterSelect extends Component {
       >
         <Image
           style={
-            this.state.unlockedCharacters.includes(name)
+            this.isUnlocked(name)
               ? styles.photo
               : [styles.photo, styles.lockedCharacter]
           }
-          source={Images[name.split(" ").join("_").toLowerCase()]}
+          source={Images[this.formatName(name)]}
           resizeMode="contain"
         />
         <Text style={styles.characterName}>{name}</Text>
-        {!this.state.unlockedCharacters.includes(name) && this.renderLock()}
+        {!this.isUnlocked(name) && this.showLocks()}
       </TouchableOpacity>
     );
   };
 
-  renderLock = () => {
-    if (this.state.keys === 0) {
+  //Show Single Lock
+  showLocks = () => {
+    if (this.state.keys && this.state.keys === 0) {
       return (
         <LottieView
           style={styles.lock}
@@ -173,42 +174,28 @@ class CharacterSelect extends Component {
     }
   };
 
-  callRenderer = () => {
-    let characters = [
-      "Nemo",
-      "Ignatius",
-      "Tummy Rub",
-      "Ariana",
-      "Loquacious",
-      "Garrett",
-      "Doug",
-      "Roger Stan Smith",
-    ];
-    let boxes = characters.map((char, index) => {
-      return this.renderCharacterImage(char, index);
-    });
-    return boxes;
-  };
-
   render() {
     return (
       <View style={styles.CharacterSelectView}>
-        <Text style={styles.heading}>SELECT A SWIMMER</Text>
-        <View style={styles.boxes}>
-          {this.state.keys !== null && this.callRenderer()}
-        </View>
-        <View style={styles.keyInfoContainer}>
-          <View style={styles.keyBox}>
-            <View style={styles.keyContainer}>
-              <Image
-                style={styles.key}
-                source={Images.key}
-                resizeMode="contain"
-              />
-              <Text style={styles.keyText}>x{this.state.keys}</Text>
+        <StatusBar barStyle="light-content" />
+        <SafeAreaView style={styles.safeArea}>
+          <Text style={styles.heading}>SELECT A SWIMMER</Text>
+          <View style={styles.boxes}>
+            {this.state.keys !== null && this.setupCharacterBoxes()}
+          </View>
+          <View style={styles.keyInfoContainer}>
+            <View style={styles.keyBox}>
+              <View style={styles.keyContainer}>
+                <Image
+                  style={styles.key}
+                  source={Images.key}
+                  resizeMode="contain"
+                />
+                <Text style={styles.keyText}>x{this.state.keys}</Text>
+              </View>
             </View>
           </View>
-        </View>
+        </SafeAreaView>
       </View>
     );
   }

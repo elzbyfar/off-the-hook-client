@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     alignItems: "center",
-    justifyContent: "center",
   },
   logo: {
     width: 150,
@@ -30,7 +29,6 @@ const styles = StyleSheet.create({
     width: 250,
     paddingVertical: 12,
     backgroundColor: "#22a1e6",
-    alignSelf: "center",
     borderColor: "#555",
     borderWidth: 1,
     borderRadius: 35,
@@ -39,6 +37,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   errors: {
+    textAlign: "center",
     color: "#a31717",
     marginTop: 2,
   },
