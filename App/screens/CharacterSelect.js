@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import LottieView from "lottie-react-native";
 import styles from "../styles/CharacterSelectStyles.js";
 import Images from "../assets/Images";
 import MakeGet from "../helpers/MakeGet";
 import MakeFetch from "../helpers/MakeFetch";
+import LottieView from "lottie-react-native";
 import ShadowView from "react-native-simple-shadow-view";
 import {
   View,
@@ -41,7 +41,12 @@ class CharacterSelect extends Component {
   componentDidMount() {
     //Initiate Character Stats
     if (this.newUser) {
-      MakeFetch("statistics", "POST", newUserObj, this.setupUser(this.user));
+      MakeFetch(
+        "statistics",
+        "POST",
+        this.newUserObj,
+        this.setupUser(this.user)
+      );
     }
     //Get User & Set State
     MakeGet(`users/${this.user.id}`, this.setupUser(this.user));
@@ -92,6 +97,48 @@ class CharacterSelect extends Component {
     return boxes;
   };
 
+  //Show Single Character Image
+  showCharacterImage = (name, index) => {
+    return (
+      <ShadowView key={index} style={styles.characterBoxContainer}>
+        <TouchableOpacity
+          style={styles.characterBox}
+          onPress={() => this.selectionHandler(name)}
+          activeOpacity={0.6}
+        >
+          <Image
+            style={
+              this.isUnlocked(name)
+                ? styles.character
+                : [styles.character, styles.lockedCharacter]
+            }
+            source={Images[this.formatName(name)]}
+            resizeMode="contain"
+          />
+          <Text style={styles.characterName}>{name}</Text>
+          {!this.isUnlocked(name) && this.showLocks(this.state.keys)}
+        </TouchableOpacity>
+      </ShadowView>
+    );
+  };
+
+  //Show Single Lock
+  showLocks = (keys) => {
+    return keys > 0 ? (
+      <LottieView
+        style={styles.lock}
+        source={require("../assets/img/animations/lock.json")}
+        autoPlay
+      />
+    ) : (
+      <Image
+        style={styles.closedLock}
+        source={Images.closedLock}
+        resizeMode="contain"
+      />
+    );
+  };
+
   //Handle Character Selection
   selectionHandler = (name) => {
     if (this.isUnlocked(name)) {
@@ -124,53 +171,6 @@ class CharacterSelect extends Component {
         name +
           " is trapped! Find a key to unlock " +
           (name === "Ariana" || name === "Loquacious" ? "her." : "him.")
-      );
-    }
-  };
-
-  //Show Single Character Image
-  showCharacterImage = (name, index) => {
-    return (
-      <ShadowView key={index} style={styles.characterBoxContainer}>
-        <TouchableOpacity
-          style={styles.characterBox}
-          onPress={() => this.selectionHandler(name)}
-          activeOpacity={0.6}
-        >
-          <Image
-            style={
-              this.isUnlocked(name)
-                ? styles.character
-                : [styles.character, styles.lockedCharacter]
-            }
-            source={Images[this.formatName(name)]}
-            resizeMode="contain"
-          />
-          <Text style={styles.characterName}>{name}</Text>
-          {!this.isUnlocked(name) && this.showLocks()}
-        </TouchableOpacity>
-      </ShadowView>
-    );
-  };
-
-  //Show Single Lock
-  showLocks = () => {
-    if (this.state.keys && this.state.keys === 0) {
-      return (
-        <LottieView
-          style={styles.lock}
-          source={require("../assets/img/animations/lock.json")}
-          resizeMode="contain"
-        />
-      );
-    } else {
-      return (
-        <LottieView
-          style={styles.lock}
-          source={require("../assets/img/animations/lock.json")}
-          autoPlay
-          resizeMode="contain"
-        />
       );
     }
   };
