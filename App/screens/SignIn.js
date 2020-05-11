@@ -36,7 +36,6 @@ const SignIn = ({ navigation }) => {
               let user = users.find((user) => {
                 return user.name === values.name;
               });
-              console.log(user);
               navigation.push("CharacterSelect", { user, newUser: false });
             });
           }}

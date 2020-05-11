@@ -4,6 +4,7 @@ import styles from "../styles/CharacterSelectStyles.js";
 import Images from "../assets/Images";
 import MakeGet from "../helpers/MakeGet";
 import MakeFetch from "../helpers/MakeFetch";
+import ShadowView from "react-native-simple-shadow-view";
 import {
   View,
   Text,
@@ -42,7 +43,6 @@ class CharacterSelect extends Component {
     if (this.newUser) {
       MakeFetch("statistics", "POST", newUserObj, this.setupUser(this.user));
     }
-
     //Get User & Set State
     MakeGet(`users/${this.user.id}`, this.setupUser(this.user));
 
@@ -72,7 +72,7 @@ class CharacterSelect extends Component {
     this.setState({
       unlockedCharacters: user.unlocked_characters,
       keys: user.keys,
-      user: this.user,
+      user: user,
     });
   };
 
@@ -131,24 +131,25 @@ class CharacterSelect extends Component {
   //Show Single Character Image
   showCharacterImage = (name, index) => {
     return (
-      <TouchableOpacity
-        key={index}
-        style={styles.characterBox}
-        onPress={() => this.selectionHandler(name)}
-        activeOpacity={0.6}
-      >
-        <Image
-          style={
-            this.isUnlocked(name)
-              ? styles.photo
-              : [styles.photo, styles.lockedCharacter]
-          }
-          source={Images[this.formatName(name)]}
-          resizeMode="contain"
-        />
-        <Text style={styles.characterName}>{name}</Text>
-        {!this.isUnlocked(name) && this.showLocks()}
-      </TouchableOpacity>
+      <ShadowView key={index} style={styles.characterBoxContainer}>
+        <TouchableOpacity
+          style={styles.characterBox}
+          onPress={() => this.selectionHandler(name)}
+          activeOpacity={0.6}
+        >
+          <Image
+            style={
+              this.isUnlocked(name)
+                ? styles.character
+                : [styles.character, styles.lockedCharacter]
+            }
+            source={Images[this.formatName(name)]}
+            resizeMode="contain"
+          />
+          <Text style={styles.characterName}>{name}</Text>
+          {!this.isUnlocked(name) && this.showLocks()}
+        </TouchableOpacity>
+      </ShadowView>
     );
   };
 
@@ -178,22 +179,22 @@ class CharacterSelect extends Component {
     return (
       <View style={styles.CharacterSelectView}>
         <StatusBar barStyle="light-content" />
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView>
           <Text style={styles.heading}>SELECT A SWIMMER</Text>
-          <View style={styles.boxes}>
+          <View style={styles.boxesContainer}>
             {this.state.keys !== null && this.setupCharacterBoxes()}
           </View>
           <View style={styles.keyInfoContainer}>
-            <View style={styles.keyBox}>
+            <ShadowView style={styles.keyBox}>
               <View style={styles.keyContainer}>
                 <Image
                   style={styles.key}
                   source={Images.key}
                   resizeMode="contain"
                 />
-                <Text style={styles.keyText}>x{this.state.keys}</Text>
+                <Text style={styles.keyContainerText}>x{this.state.keys}</Text>
               </View>
-            </View>
+            </ShadowView>
           </View>
         </SafeAreaView>
       </View>
