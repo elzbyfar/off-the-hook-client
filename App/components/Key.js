@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Image, Animated } from "react-native";
 import Images from "../assets/Images";
-import Constants from "../helpers/Constants";
+import Values from "../helpers/Values";
 
 export default class Key extends Component {
   constructor(props) {

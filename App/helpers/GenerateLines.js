@@ -1,12 +1,11 @@
-import Constants from "./Constants";
+import Values from "./Values";
 
 const randomBetween = (min, max) =>
   Math.floor(Math.random() * (max - min * 1) + min);
 
 export const GenerateLines = () => {
-  let topLineHeight = randomBetween(100, Constants.maxHeight / 2 - 100);
-  let bottomLineHeight =
-    Constants.maxHeight - topLineHeight - Constants.gapSize;
+  let topLineHeight = randomBetween(100, Values.maxHeight / 2 - 100);
+  let bottomLineHeight = Values.maxH - topLineHeight - Values.gapSize;
 
   let sizes = [topLineHeight, bottomLineHeight];
 

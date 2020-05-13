@@ -1,109 +1,65 @@
 import React, { Component } from "react";
-import Constants from "../helpers/Constants";
+import MakeGet from "../helpers/MakeGet";
 import Images from "../assets/Images";
 import styles from "../styles/MapStyles.js";
 
 import { View, TouchableOpacity, Image, Text, ScrollView } from "react-native";
 
-const backgroundImages = [
-  Images.backgroundImage1,
-  Images.backgroundImage2,
-  Images.backgroundImage3,
-  Images.backgroundImage4,
-  Images.backgroundImage5,
-  Images.backgroundImage6,
-  Images.backgroundImage7,
-];
-
-class Map extends Component {
+export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      unlockedLevels: [],
-      currentLevel: {},
-      currentStats: {
-        key: "",
-        status: "",
-        mostPelletPoints: 0,
-      },
-      characterStats: null,
-      allLevels: null,
-      characterName: null,
-      character: null,
-      active: 0,
+      active: null,
     };
   }
-
-  user = this.props.route.params.selection.user;
-  userID = this.props.route.params.selection.user.id;
-  character = this.props.route.params.selection.selectedCharacter;
-  characterName = this.props.route.params.selection.selectedCharacter.name;
-  userKeys = this.props.route.params.selection.userKeys;
+  gameObj = {
+    user: this.props.route.params.selection.user,
+    keys: this.props.route.params.selection.keys,
+    character: this.props.route.params.selection.character,
+    characterName: null,
+    characterStats: null,
+    currentLevel: {},
+    currentStats: {},
+    levels: null,
+  };
+  nav = this.props.navigation;
 
   componentDidMount() {
-    fetch("http://localhost:3000/api/v1/levels/", {
-      method: "GET",
-    })
-      .then((resp) => resp.json())
-      .then((levels) => {
-        this.setState({
-          allLevels: levels,
-          currentLevel: levels[0],
-        });
-      });
-
-    let relatedStats = null;
-
-    this.setState({
-      characterName: this.characterName,
-      character: this.character,
-      // unlockedLevels: this.unlockedLevels,
+    MakeGet("levels", (levels) => {
+      this.gameObj.levels = levels;
+      this.gameObj.currentLevel = levels[0];
     });
 
-    fetch(`http://localhost:3000/api/v1/characters/${this.character.id}`, {
-      method: "GET",
-    })
-      .then((resp) => resp.json())
-      .then((character) => {
-        let stats = character.statistics;
-        if (stats.length === 0) {
-          return;
-        }
-        relatedStats = stats.filter((stat) => {
-          return stat.user_id === this.userID;
-        });
-        this.setState({
-          characterStats: relatedStats,
-        });
-
-        this.setCurrentStats();
-      });
+    MakeGet(`characters/${this.gameObj.character.id}`, (char) => {
+      (this.gameObj.characterStats = char.statistics.filter(
+        (stats) => stats.user_id === this.gameObj.user.id
+      )),
+        (this.gameObj.characterName = char.name);
+      this.gameObj.character = char;
+      this.setCurrentStats(0);
+    });
   }
 
-  setupCharacter = () => {};
-
-  change = ({ nativeEvent }) => {
-    let levelStats;
-    let mostPelletPoints;
-    let key;
-    let status;
-    let slide;
-
-    slide = Math.ceil(
+  changeSlide = ({ nativeEvent }) => {
+    let slide = Math.ceil(
       nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
     );
-    slide > 6 && (slide = 6);
-    slide < 0 && (slide = 0);
 
-    levelStats = this.state.characterStats.filter((stats) => {
+    (slide > 6 && (slide = 6)) || (slide < 0 && (slide = 0));
+
+    this.setCurrentStats(slide);
+  };
+
+  setCurrentStats = (slide) => {
+    let mostPelletPoints = 0;
+    let capturedKey = "No Attempts";
+    let status = "No Attempts";
+
+    let levelStats = this.gameObj.characterStats.filter((stats) => {
       return stats.level_id === slide + 1;
     });
 
-    if (levelStats.length === 0) {
-      mostPelletPoints = 0;
-      key = "No Attempts";
-      status = "No Attempts";
-    } else {
+    if (levelStats.length > 0) {
       mostPelletPoints = levelStats.sort((a, b) => {
         return a.pellet_points > b.pellet_points ? -1 : 1;
       })[0].pellet_points;
@@ -113,108 +69,81 @@ class Map extends Component {
       });
       status ? (status = "Complete!") : (status = "Not Complete");
 
-      key = levelStats.find((stats) => {
+      capturedKey = levelStats.find((stats) => {
         return stats.captured_key;
       });
-      key ? (key = "Captured!") : (key = "Not Captured");
+      capturedKey
+        ? (capturedKey = "Captured!")
+        : (capturedKey = "Not Captured");
     }
 
-    if (slide !== this.state.active) {
-      this.setState((state) => ({
-        active: slide,
-        currentLevel: state.allLevels[slide],
-        currentStats: {
-          ...state.currentStats,
-          key: key,
-          status: status,
-          mostPelletPoints: mostPelletPoints,
-        },
-      }));
-    }
-  };
-
-  setCurrentStats = () => {
-    let levelStats;
-    let mostPelletPoints;
-    let key;
-    let status;
-
-    levelStats = this.state.characterStats.filter((stats) => {
-      return stats.level_id === this.state.active + 1;
-    });
-
-    if (levelStats.length === 0) {
-      mostPelletPoints = 0;
-      key = "No Attempts";
-      status = "No Attempts";
-    } else {
-      mostPelletPoints = levelStats.sort((a, b) => {
-        return a.pellet_points > b.pellet_points ? -1 : 1;
-      })[0].pellet_points;
-
-      status = levelStats.find((stats) => {
-        return stats.completed;
-      });
-      status ? (status = "Complete!") : (status = "Not Complete");
-
-      key = levelStats.find((stats) => {
-        return stats.captured_key;
-      });
-      key ? (key = "Captured!") : (key = "Not Captured");
-    }
-
-    this.setState((state) => ({
-      currentStats: {
-        ...state.currentStats,
-        key: key,
+    if (slide !== this.state.active && this.gameObj.levels) {
+      this.gameObj.currentStats = {
+        capturedKey: capturedKey,
         status: status,
         mostPelletPoints: mostPelletPoints,
-      },
-    }));
+      };
+      (this.gameObj.currentLevel = this.gameObj.levels[slide]),
+        this.setState({ active: slide });
+    }
   };
+
+  levelName = (index) =>
+    this.gameObj.levels && this.gameObj.levels[index].level_name;
+
+  levelNameStatsHeading = () =>
+    `${this.gameObj.currentLevel.level_name} Stats`.toUpperCase();
+
+  territoryName = (index) =>
+    this.gameObj.levels && this.gameObj.levels[index].territory_name;
+
+  pelletsObjective = (index) =>
+    this.gameObj.levels &&
+    `${this.gameObj.levels[index].pellet_points_needed} Pellet Points`;
+
+  timeObjective = (index) =>
+    this.gameObj.levels && `${this.gameObj.levels[index].max_time} Seconds`;
+
+  findCharacterName = () =>
+    this.gameObj.characterName && this.gameObj.characterName.toUpperCase();
+
+  findCharacterImage = () =>
+    this.gameObj.characterName &&
+    Images[this.gameObj.characterName.split(" ").join("_").toLowerCase()];
+
+  pickColor = (stat) =>
+    this.gameObj.currentStats[stat] === "Captured!" ||
+    this.gameObj.currentStats[stat] === "Complete!"
+      ? "#e4b23e"
+      : "#d5ebde";
 
   render() {
     return (
       <View style={styles.container}>
-        {/* <View style={styles.levelsContainer}> */}
-        {/* <View style={styles.leftArrow}>
-            <Image
-              style={styles.arrows}
-              source={Images.left}
-              resizeMode="contain"
-            />
-          </View> */}
-        {/* <View style={styles.levelCard}> */}
-        {/* <View style={styles.midSection}> */}
-        <View style={styles.imageView}>
+        <View style={styles.levelContainer}>
           <ScrollView
             pagingEnabled
             horizontal
-            ref={this.setScrollViewRef}
-            onScroll={this.change}
-            showsHorizontalScrollIndicator={false}
+            onScroll={this.changeSlide}
             style={{ flexDirection: "column" }}
           >
-            {backgroundImages.map((image, index) => (
+            {Images.backgrounds.map((image, index) => (
               <View key={index} style={styles.imageWrapper}>
                 <Image
                   source={image}
-                  style={styles.imageWrapperBackground}
+                  style={styles.levelBackground}
                   blurRadius={10}
                   resizeMode="cover"
                 />
                 <View style={styles.levelNameView}>
                   <Text style={styles.levelCountText}>
-                    {this.state.allLevels &&
-                      this.state.allLevels[index].level_name}
+                    {this.levelName(index)}
                   </Text>
                   <Text style={styles.levelNameText}>
-                    {this.state.allLevels &&
-                      this.state.allLevels[index].territory_name}
+                    {this.territoryName(index)}
                   </Text>
                 </View>
                 <Image
-                  key={index}
                   style={styles.levelImage}
                   source={image}
                   resizeMode="contain"
@@ -223,14 +152,10 @@ class Map extends Component {
                   <View style={styles.levelRequirements}>
                     <Text style={styles.objectives}>OBJECTIVES</Text>
                     <Text style={styles.objectiveItems}>
-                      {this.state.allLevels &&
-                        this.state.allLevels[index].pellet_points_needed}{" "}
-                      Pellet Points
+                      {this.pelletsObjective(index)}
                     </Text>
                     <Text style={styles.objectiveItems}>
-                      {this.state.allLevels &&
-                        this.state.allLevels[index].max_time}{" "}
-                      Seconds
+                      {this.timeObjective(index)}
                     </Text>
                     <Text style={styles.objectiveItems}>1 Key</Text>
                   </View>
@@ -239,109 +164,68 @@ class Map extends Component {
             ))}
           </ScrollView>
         </View>
-        {/* </View> */}
-        {/* </View> */}
-        {/* <View style={styles.rightArrow}>
-            <Image
-              style={styles.arrows}
-              source={Images.right}
-              resizeMode="contain"
-            />
-          </View> */}
-        {/* </View> */}
         <View style={styles.characterInfoContainer}>
           <View style={styles.characterCard}>
             <View style={styles.levelDetails}>
               <View style={styles.characterPhotoContainer}>
                 <Image
                   style={styles.characterPhoto}
-                  source={
-                    this.state.characterName &&
-                    Images[
-                      this.state.characterName
-                        .split(" ")
-                        .join("_")
-                        .toLowerCase()
-                    ]
-                  }
+                  source={this.findCharacterImage()}
                   resizeMode="contain"
                 />
                 <Text style={styles.characterName}>
-                  {this.state.characterName &&
-                    this.state.characterName.toUpperCase()}
+                  {this.findCharacterName()}
                 </Text>
               </View>
 
               <View style={styles.userStats}>
                 <Text style={styles.statsHeading}>
-                  {`${this.state.currentLevel.level_name} Stats`.toUpperCase()}
+                  {this.levelNameStatsHeading()}
                 </Text>
-                <Text style={styles.stats}>
-                  KEY:{" "}
+                <Text style={styles.statsCategory}>
+                  {"KEY: "}
                   <Text
-                    style={{
-                      color:
-                        this.state.currentStats.key === "Captured!"
-                          ? "#E4B23E"
-                          : "#d5ebde",
-                      fontWeight: "600",
-                      fontSize: 16,
-                    }}
+                    style={[
+                      styles.statsText,
+                      { color: this.pickColor("capturedKey") },
+                    ]}
                   >
-                    {this.state.currentStats.key}
+                    {this.gameObj.currentStats.capturedKey}
                   </Text>
                 </Text>
-                <Text style={styles.stats}>
-                  STATUS:{" "}
+                <Text style={styles.statsCategory}>
+                  {"STATUS: "}
                   <Text
-                    style={{
-                      color:
-                        this.state.currentStats.status === "Complete!"
-                          ? "#E4B23E"
-                          : "#d5ebde",
-                      fontWeight: "600",
-                      fontSize: 16,
-                    }}
+                    style={[
+                      styles.statsText,
+                      { color: this.pickColor("status") },
+                    ]}
                   >
-                    {this.state.currentStats.status}
+                    {this.gameObj.currentStats.status}
                   </Text>
                 </Text>
-                <Text style={styles.stats}>
-                  MOST PELLET POINTS:{" "}
+                <Text style={styles.statsCategory}>
+                  {"MOST PELLET POINTS: "}
                   <Text
-                    style={{
-                      color:
-                        this.state.currentStats.status === "Complete!"
-                          ? "#E4B23E"
-                          : "#d5ebde",
-                      fontWeight: "600",
-                      fontSize: 16,
-                    }}
+                    style={[
+                      styles.statsText,
+                      { color: this.pickColor("status") },
+                    ]}
                   >
-                    {this.state.currentStats.mostPelletPoints}
+                    {this.gameObj.currentStats.mostPelletPoints}
                   </Text>
                 </Text>
-                <Text></Text>
-                <Text></Text>
+                <View>
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.nav.push("LevelOne", { gameObj: this.gameObj })
+                    }
+                    style={styles.startButton}
+                  >
+                    <Text style={styles.start}>START</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-            <View style={styles.startButtonContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.push("LevelOne", {
-                    userKeys: this.userKeys,
-                    currentLevel: this.state.currentLevel,
-                    currentStats: this.state.currentStats,
-                    user: this.user,
-                    character: this.state.character,
-                    allLevels: this.state.allLevels,
-                  })
-                }
-                activeOpacity={0.6}
-                style={styles.startButton}
-              >
-                <Text style={styles.start}>START</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -349,5 +233,3 @@ class Map extends Component {
     );
   }
 }
-
-export default Map;

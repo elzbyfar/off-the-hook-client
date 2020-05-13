@@ -1,11 +1,10 @@
 import { Dimensions } from "react-native";
 
-Constants = {
+Values = {
   API_BASE: "http://localhost:3000/api/v1/",
 
-  maxWidth: Dimensions.get("window").width,
-  maxHeight: Dimensions.get("window").height,
-  gapSize: 300,
+  maxW: Dimensions.get("window").width,
+  maxH: Dimensions.get("window").height,
 
   floorWidth: 512,
   floorHeight: 200,
@@ -40,4 +39,4 @@ Constants = {
   keyRadius: 22,
 };
 
-export default Constants;
+export default Values;

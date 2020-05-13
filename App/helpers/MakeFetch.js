@@ -1,7 +1,7 @@
-import Constants from "./Constants";
+import Values from "./Values";
 
 const MakeFetch = (urlSlug, meth, stringifyObj, thenFunction) => {
-  fetch(`${Constants.API_BASE}/${urlSlug}`, {
+  fetch(`${Values.API_BASE}/${urlSlug}`, {
     method: meth,
     headers: {
       "Content-Type": "application/json",

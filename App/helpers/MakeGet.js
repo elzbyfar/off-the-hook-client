@@ -1,7 +1,7 @@
-import Constants from "./Constants";
+import Values from "./Values";
 
 const MakeGet = (urlSlug, thenFunction) => {
-  fetch(`${Constants.API_BASE}/${urlSlug}`)
+  fetch(`${Values.API_BASE}/${urlSlug}`)
     .then((resp) => resp.json())
     .then(thenFunction);
 };

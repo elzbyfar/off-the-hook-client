@@ -65,10 +65,12 @@ const styles = StyleSheet.create({
   lock: {
     position: "absolute",
     height: 62,
+    width: 53,
   },
   closedLock: {
     position: "absolute",
     height: 48,
+    width: 39,
   },
   keyInfoContainer: {
     position: "relative",

@@ -75,15 +75,19 @@ class CharacterSelect extends Component {
   //Set User State
   setupUser = (user) => {
     this.setState({
-      unlockedCharacters: user.unlocked_characters,
-      keys: user.keys,
-      user: user,
+      unlockedCharacters: this.user && user.unlocked_characters,
+      keys: this.user && user.keys,
+      user: this.user && user,
     });
   };
 
   //Unlock Character & Update Keys
   unlockCharacterAndUpdateKeys = (name) => {
     this.setState((state) => ({
+      user: {
+        ...state.user,
+        unlocked_characters: [...state.unlockedCharacters, name],
+      },
       keys: state.keys - 1,
       unlockedCharacters: [...state.unlockedCharacters, name],
     }));
@@ -146,9 +150,7 @@ class CharacterSelect extends Component {
       this.props.navigation.push("Map", {
         selection: {
           ...this.state,
-          selectedCharacter: this.state.characters.find(
-            (char) => char.name === name
-          ),
+          character: this.state.characters.find((char) => char.name === name),
         },
       });
     } else if (!this.isUnlocked(name) && this.state.keys > 0) {

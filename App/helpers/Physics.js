@@ -1,6 +1,6 @@
 import Matter from "matter-js";
-import Constants from "./Constants";
-import Images from "../assets/Images";
+import Values from "./Values";
+// import Images from "../assets/Images";
 
 let tick = 0;
 let pose = 1;
@@ -43,32 +43,32 @@ const Physics = (entities, { touches, time }) => {
   //HOOK REGENERATION + VERTICAL MOVEMENT
   if (entities.hook1.body.position.x <= -200) {
     Matter.Body.setPosition(entities.hook1.body, {
-      x: Constants.maxWidth * 2 - Constants.hookWidth / 2,
-      y: Constants.maxHeight / 8,
+      x: Values.maxW * 2 - Values.hookWidth / 2,
+      y: Values.maxH / 8,
     });
   } else {
     Matter.Body.translate(entities.hook1.body, { x: -3.0, y: 0 });
   }
-  if (entities.hook1.body.position.x - Constants.maxWidth < -200) {
+  if (entities.hook1.body.position.x - Values.maxW < -200) {
     Matter.Body.translate(entities.hook1.body, { x: 0, y: -4 });
   } else if (
-    entities.hook1.body.position.x - Constants.maxWidth > 100 &&
-    entities.hook1.body.position.x - Constants.maxWidth < 200
+    entities.hook1.body.position.x - Values.maxW > 100 &&
+    entities.hook1.body.position.x - Values.maxW < 200
   ) {
     Matter.Body.translate(entities.hook1.body, { x: 0, y: -4 });
   } else if (
-    entities.hook1.body.position.x - Constants.maxWidth > 0 &&
-    entities.hook1.body.position.x - Constants.maxWidth < 100
+    entities.hook1.body.position.x - Values.maxW > 0 &&
+    entities.hook1.body.position.x - Values.maxW < 100
   ) {
     Matter.Body.translate(entities.hook1.body, { x: 0, y: 4 });
   } else if (
-    entities.hook1.body.position.x - Constants.maxWidth > -100 &&
-    entities.hook1.body.position.x - Constants.maxWidth < 0
+    entities.hook1.body.position.x - Values.maxW > -100 &&
+    entities.hook1.body.position.x - Values.maxW < 0
   ) {
     Matter.Body.translate(entities.hook1.body, { x: 0, y: -4 });
   } else if (
-    entities.hook1.body.position.x - Constants.maxWidth > -200 &&
-    entities.hook1.body.position.x - Constants.maxWidth < -100
+    entities.hook1.body.position.x - Values.maxW > -200 &&
+    entities.hook1.body.position.x - Values.maxW < -100
   ) {
     Matter.Body.translate(entities.hook1.body, { x: 0, y: 4 });
   }
@@ -76,8 +76,8 @@ const Physics = (entities, { touches, time }) => {
   //CRAB REGENERATION + VERTICAL MOVEMENT
   if (entities.crab.body.position.x <= -100) {
     Matter.Body.setPosition(entities.crab.body, {
-      x: Constants.maxWidth * 4 - Constants.crabWidth / 2,
-      y: Constants.maxHeight - 195,
+      x: Values.maxW * 4 - Values.crabWidth / 2,
+      y: Values.maxH - 195,
     });
   } else {
     Matter.Body.translate(entities.crab.body, { x: -3.8, y: 0 });
@@ -86,8 +86,8 @@ const Physics = (entities, { touches, time }) => {
   //PURPLE SHARK REGENERATION
   if (entities.purpleShark.body.position.x <= -100) {
     Matter.Body.setPosition(entities.purpleShark.body, {
-      x: Constants.maxWidth * 4 - Constants.purpleSharkWidth / 2,
-      y: Constants.maxHeight - 100 - (300 + Math.floor(Math.random() * 200)),
+      x: Values.maxW * 4 - Values.purpleSharkWidth / 2,
+      y: Values.maxH - 100 - (300 + Math.floor(Math.random() * 200)),
     });
   } else {
     Matter.Body.translate(entities.purpleShark.body, { x: -2.6, y: 0.2 });
@@ -96,59 +96,59 @@ const Physics = (entities, { touches, time }) => {
   //FISH BONES REGENERATION
   if (entities.fishBones.body.position.x <= -100) {
     Matter.Body.setPosition(entities.fishBones.body, {
-      x: Constants.maxWidth * 4 - Constants.fishBonesWidth / 2,
-      y: Constants.maxHeight - (450 + Math.floor(Math.random() * 200)),
+      x: Values.maxW * 4 - Values.fishBonesWidth / 2,
+      y: Values.maxH - (450 + Math.floor(Math.random() * 200)),
     });
   } else {
     Matter.Body.translate(entities.fishBones.body, { x: -1, y: -0.05 });
   }
 
-  //FOOD MAKER
+  //PELLET MAKER
   let n = null;
   for (let i = 1; i <= 90; i++) {
     i % 3 === 1 ? (n = 1) : null;
     i % 3 === 2 ? (n = 2) : null;
     i % 3 === 0 ? (n = 3) : null;
 
-    if (entities["food" + n].body.position.x <= -200) {
-      Matter.Body.setPosition(entities["food" + n].body, {
-        x: (Constants.maxWidth * (n + 1)) / 2 - Math.floor(Math.random() * 300),
+    if (entities["pellet" + n].body.position.x <= -200) {
+      Matter.Body.setPosition(entities["pellet" + n].body, {
+        x: (Values.maxW * (n + 1)) / 2 - Math.floor(Math.random() * 300),
         y: 5,
       });
     } else {
-      Matter.Body.translate(entities["food" + n].body, { x: -0.04, y: 0.03 });
+      Matter.Body.translate(entities["pellet" + n].body, { x: -0.04, y: 0.03 });
     }
 
-    //GROUNDED FOOD
-    if (entities["food" + n].body.position.y > 722) {
-      Matter.Body.translate(entities["food" + n].body, { x: 0, y: -0.09 });
+    //GROUNDED pellet
+    if (entities["pellet" + n].body.position.y > 722) {
+      Matter.Body.translate(entities["pellet" + n].body, { x: 0, y: -0.09 });
     }
 
     if (
       entities.fish.body.position.y > 710 &&
-      !(entities["food" + n].body.position.y > 722)
+      !(entities["pellet" + n].body.position.y > 722)
     ) {
-      Matter.Body.translate(entities["food" + n].body, { x: 0.04, y: 0 });
+      Matter.Body.translate(entities["pellet" + n].body, { x: 0.04, y: 0 });
     }
   }
 
-  //EAT FOOD
+  //EAT PELLET
   for (let i = 1; i <= 3; i++) {
     if (
       Math.abs(
-        entities["food" + i].body.position.x - entities.fish.body.position.x
+        entities["pellet" + i].body.position.x - entities.fish.body.position.x
       ) < 35 &&
       Math.abs(
-        entities["food" + i].body.position.y - entities.fish.body.position.y
+        entities["pellet" + i].body.position.y - entities.fish.body.position.y
       ) < 20
     ) {
-      Matter.Body.setPosition(entities["food" + i].body, {
-        x: (Constants.maxWidth * (n + 1)) / 2 - Math.floor(Math.random() * 300),
+      Matter.Body.setPosition(entities["pellet" + i].body, {
+        x: (Values.maxW * (n + 1)) / 2 - Math.floor(Math.random() * 300),
         y: 5,
       });
     }
   }
-  //EAT FOOD END OF CODE
+  //EAT pellet END OF CODE
 
   //KEY DROPS...MAYBE
   if (entities.key.body) {
@@ -221,7 +221,7 @@ const Physics = (entities, { touches, time }) => {
   //COLOR CHANGE
   if (tick % 7 === 0) {
     for (let i = 1; i <= 3; i++) {
-      entities["food" + i].colorPick = colorPick;
+      entities["pellet" + i].colorPick = colorPick;
     }
     colorPick += 1;
     if (colorPick === 4) {
