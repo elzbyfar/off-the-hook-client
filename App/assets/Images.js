@@ -57,4 +57,5 @@ export default Images = {
     require("./img/redCrab07.png"),
     require("./img/redCrab08.png"),
   ],
+  titleScreen: require("./img/title-screen.gif"),
 };
