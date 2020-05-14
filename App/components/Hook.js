@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image, Animated } from "react-native";
+import { Animated } from "react-native";
 import Images from "../assets/Images";
 
 export default class Hook extends Component {
@@ -18,9 +18,9 @@ export default class Hook extends Component {
           width: 90,
           height: 350,
           opacity: 0.6,
-          // tintColor: "#",
+          zIndex: 50,
         }}
-        resizeMode="contain"
+        resizeMode="stretch"
         source={Images.hook}
       ></Animated.Image>
     );

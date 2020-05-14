@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { View, Image, Animated } from "react-native";
+import { Image } from "react-native";
 import Images from "../assets/Images";
-import Values from "../helpers/Values";
 
 export default class Treasure extends Component {
   constructor(props) {
@@ -13,7 +12,7 @@ export default class Treasure extends Component {
     const x = this.props.body.position.x - width / 2;
     const y = this.props.body.position.y - height / 2;
 
-    let colors = ["#e38c64", "#db794b", "#d9642e", "#db794b"];
+    let colors = ["#e39f64", "#db724b", "#d9622e", "#db725b"];
 
     return (
       <Image
@@ -27,7 +26,7 @@ export default class Treasure extends Component {
           tintColor: colors[this.props.colorPick],
         }}
         resizeMode="contain"
-        source={Images.food}
+        source={Images.pellet}
       ></Image>
     );
   }

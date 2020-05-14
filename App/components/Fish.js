@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { View, Image, Animated } from "react-native";
+import { Animated } from "react-native";
 import Images from "../assets/Images";
 
 export default class Fish extends Component {
   constructor(props) {
     super(props);
-
     this.animatedValue = new Animated.Value(this.props.body.velocity.y);
   }
   render() {
@@ -14,11 +13,11 @@ export default class Fish extends Component {
     const x = this.props.body.position.x - width / 2;
     const y = this.props.body.position.y - height / 2;
 
-    //FISH ROTATION
+    //ROTATION
     this.animatedValue.setValue(this.props.body.velocity.y);
     let rotation = this.animatedValue.interpolate({
-      inputRange: [-10, 0, 10, 20],
-      outputRange: ["-40deg", "0deg", "25deg", "55deg"],
+      inputRange: [-10, 0, 5, 10],
+      outputRange: ["-45deg", "0deg", "25deg", "50deg"],
       extrapolate: "clamp",
     });
 

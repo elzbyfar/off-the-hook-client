@@ -10,6 +10,10 @@ export default class Map extends Component {
     super(props);
     this.state = {
       active: null,
+      capturedKey: null,
+      status: null,
+      mostPelletPoints: 0,
+      gameObj: {},
     };
   }
   gameObj = {
@@ -25,6 +29,15 @@ export default class Map extends Component {
   nav = this.props.navigation;
 
   componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener("focus", () => {
+      console.log("in here");
+      this.setState({
+        gameObj: this.gameObj,
+        capturedKey: this.gameObj.currentStats.capturedKey,
+        status: this.gameObj.currentStats.status,
+        mostPelletPoints: this.gameObj.currentStats.mostPelletPoints,
+      });
+    });
     MakeGet("levels", (levels) => {
       this.gameObj.levels = levels;
       this.gameObj.currentLevel = levels[0];
@@ -38,6 +51,15 @@ export default class Map extends Component {
       this.gameObj.character = char;
       this.setCurrentStats(0);
     });
+    this.setState({
+      gameObj: this.gameObj,
+      capturedKey: this.gameObj.currentStats.capturedKey,
+      status: this.gameObj.currentStats.status,
+      mostPelletPoints: this.gameObj.currentStats.mostPelletPoints,
+    });
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   changeSlide = ({ nativeEvent }) => {
@@ -83,8 +105,14 @@ export default class Map extends Component {
         status: status,
         mostPelletPoints: mostPelletPoints,
       };
+      console.log("stats", this.gameObj.currentStats);
       (this.gameObj.currentLevel = this.gameObj.levels[slide]),
-        this.setState({ active: slide });
+        this.setState({
+          active: slide,
+          capturedKey: capturedKey,
+          status: status,
+          mostPelletPoints: mostPelletPoints,
+        });
     }
   };
 
@@ -190,7 +218,8 @@ export default class Map extends Component {
                       { color: this.pickColor("capturedKey") },
                     ]}
                   >
-                    {this.gameObj.currentStats.capturedKey}
+                    {this.state.capturedKey ||
+                      this.gameObj.currentStats.capturedKey}
                   </Text>
                 </Text>
                 <Text style={styles.statsCategory}>
@@ -201,7 +230,7 @@ export default class Map extends Component {
                       { color: this.pickColor("status") },
                     ]}
                   >
-                    {this.gameObj.currentStats.status}
+                    {this.state.status || this.gameObj.currentStats.status}
                   </Text>
                 </Text>
                 <Text style={styles.statsCategory}>
@@ -212,7 +241,8 @@ export default class Map extends Component {
                       { color: this.pickColor("status") },
                     ]}
                   >
-                    {this.gameObj.currentStats.mostPelletPoints}
+                    {this.state.mostPelletPoints ||
+                      this.gameObj.currentStats.mostPelletPoints}
                   </Text>
                 </Text>
                 <View>

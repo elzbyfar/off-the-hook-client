@@ -53,7 +53,7 @@ export default class LevelOne extends Component {
     if (this.state.timer === 0 && this.state.running) {
       this.gameEngine.dispatch({ type: "next-level" });
       if (this.isWinningGame()) {
-        MakeFetch("statistics", "POST", this.saveStat());
+        MakeFetch("statistics", "POST", this.saveStatObj());
       }
     }
   }
@@ -78,9 +78,10 @@ export default class LevelOne extends Component {
       }));
       clearInterval(this.interval);
       if (this.state.user) {
-        MakeFetch("statistics", "POST", this.saveStat());
+        MakeFetch("statistics", "POST", this.saveStatObj());
       }
     }
+
     if (event.type === "next-level") {
       clearInterval(this.interval);
       this.setState((state) => ({
@@ -134,7 +135,7 @@ export default class LevelOne extends Component {
       : "Sorry.\nCapture The Missing Key to complete this level.";
   };
 
-  saveStat = () => {
+  saveStatObj = () => {
     return {
       completed: this.isWinningGame(),
       captured_key: this.state.capturedKey === "Captured!",
@@ -168,6 +169,7 @@ export default class LevelOne extends Component {
 
   selectLevel = () => {
     clearInterval(this.interval);
+
     this.nav.navigate("Map", {
       selection: {
         keys: this.state.keys,
@@ -224,13 +226,16 @@ export default class LevelOne extends Component {
       this.bodies.fish,
       this.bodies.floor1,
       this.bodies.floor2,
-      this.bodies.hook1,
+      this.bodies.hook,
       this.bodies.crab,
       this.bodies.purpleShark,
       this.bodies.fishBones,
       this.bodies.pellet1,
       this.bodies.pellet2,
       this.bodies.pellet3,
+      this.bodies.pellet4,
+      this.bodies.pellet5,
+      this.bodies.pellet6,
       this.bodies.key,
     ]);
 
@@ -266,6 +271,9 @@ export default class LevelOne extends Component {
       if (other.label === "Circle Body") {
         this.gameEngine.dispatch({ type: "game-over" });
       }
+      if (other.label === "Rectangle Body" && other.area === 31500) {
+        this.gameEngine.dispatch({ type: "game-over" });
+      }
     });
 
     //RETURN ENTITIES TO RENDER ON SCREEN
@@ -277,13 +285,16 @@ export default class LevelOne extends Component {
       },
       key: this.bodies.renderers.key,
       fish: this.bodies.renderers.fish,
-      hook1: this.bodies.renderers.hook1,
+      hook: this.bodies.renderers.hook,
       floor1: this.bodies.renderers.floor1,
       floor2: this.bodies.renderers.floor2,
       crab: this.bodies.renderers.crab,
       pellet1: this.bodies.renderers.pellet1,
       pellet2: this.bodies.renderers.pellet2,
       pellet3: this.bodies.renderers.pellet3,
+      pellet4: this.bodies.renderers.pellet4,
+      pellet5: this.bodies.renderers.pellet5,
+      pellet6: this.bodies.renderers.pellet6,
       fishBones: this.bodies.renderers.fishBones,
       purpleShark: this.bodies.renderers.purpleShark,
     };

@@ -12,9 +12,9 @@ Values = {
   backgroundImageWidth: 1000,
   backgroundImageHeight: 657,
 
-  hookWidth: 103,
-  hookHeight: 400,
-  hookRadius: 200,
+  hookWidth: 90,
+  hookHeight: 350,
+  // hookRadius: 180,
 
   crabWidth: 104,
   crabHeight: 78,

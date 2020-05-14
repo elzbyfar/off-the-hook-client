@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { View, Image, Animated } from "react-native";
+import { Animated } from "react-native";
 import Images from "../assets/Images";
 
 export default class PurpleShark extends Component {
   constructor(props) {
     super(props);
-
     this.animatedValue = new Animated.Value(this.props.body.velocity.x);
   }
   render() {
@@ -14,12 +13,7 @@ export default class PurpleShark extends Component {
     const x = this.props.body.position.x - width / 2;
     const y = this.props.body.position.y - height / 2;
 
-    // this.animatedValue.setValue(this.props.body.velocity.x);
-    // let rotation = this.animatedValue.interpolate({
-
-    // })
-
-    let image = Images["purpleShark" + this.props.purpleSharkPose];
+    let image = Images.purpleShark[this.props.purpleSharkPose];
 
     return (
       <Animated.Image
@@ -29,7 +23,6 @@ export default class PurpleShark extends Component {
           left: x,
           width: 188,
           height: 152,
-          // opacity: 0.3,
           zIndex: 10,
         }}
         resizeMode="stretch"

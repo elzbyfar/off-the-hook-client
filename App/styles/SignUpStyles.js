@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   errors: {
+    alignSelf: "center",
     color: "#a31717",
     marginTop: 2,
   },
