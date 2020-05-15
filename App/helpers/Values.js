@@ -1,10 +1,14 @@
 import { Dimensions } from "react-native";
 
+// const characterSelectContainer = Values.maxH - Values.maxH / 3;
+
 Values = {
-  API_BASE: "http://localhost:3000/api/v1/",
+  API_BASE: "https://lit-depths-27271.herokuapp.com/api/v1",
 
   maxW: Dimensions.get("window").width,
   maxH: Dimensions.get("window").height,
+
+  // characterSelectContainer: characterSelectContainer,
 
   floorWidth: 512,
   floorHeight: 200,
@@ -14,7 +18,6 @@ Values = {
 
   hookWidth: 90,
   hookHeight: 350,
-  // hookRadius: 180,
 
   crabWidth: 104,
   crabHeight: 78,

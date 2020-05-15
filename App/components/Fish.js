@@ -21,10 +21,22 @@ export default class Fish extends Component {
       extrapolate: "clamp",
     });
 
-    let image =
-      Images[
-        this.props.name.split(" ").join("_").toLowerCase() + this.props.pose
-      ];
+    let image = () => {
+      if (this.props.name.split(" ").join("_").toLowerCase() === "nemo") {
+        return Images[
+          this.props.name.split(" ").join("_").toLowerCase() + this.props.pose
+        ];
+      } else if (
+        this.props.name.split(" ").join("_").toLowerCase() ===
+        "roger_stan_smith"
+      ) {
+        return Images[
+          this.props.name.split(" ").join("_").toLowerCase() + this.props.pose
+        ];
+      } else {
+        return Images[this.props.name.split(" ").join("_").toLowerCase()];
+      }
+    };
 
     return (
       <Animated.Image
@@ -39,7 +51,7 @@ export default class Fish extends Component {
           transform: [{ rotate: rotation }],
         }}
         resizeMode="contain"
-        source={image}
+        source={image()}
       ></Animated.Image>
     );
   }

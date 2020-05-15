@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import { Value } from "react-native-reanimated";
+import Values from "../helpers/Values";
 
 const styles = StyleSheet.create({
   CharacterSelectView: {
@@ -8,29 +10,30 @@ const styles = StyleSheet.create({
     backgroundColor: "#22a1e6",
   },
   heading: {
-    width: 300,
+    width: Values.maxW / 1.35,
     color: "#eee",
-    fontSize: 20,
-    fontWeight: "500",
+    fontSize: Values.maxH / 43,
+    fontWeight: "400",
     textAlign: "center",
+    alignSelf: "center",
     alignItems: "center",
     letterSpacing: 1,
-    marginBottom: 10,
+    marginBottom: Values.maxH / 100,
     textShadowColor: "#444",
     textShadowRadius: 3,
     textShadowOffset: { width: -2.5, height: 2 },
   },
   boxesContainer: {
-    width: 310,
-    height: 600,
+    width: Values.maxW / 1.21,
+    height: Values.maxH / 1.398,
     borderWidth: 2,
     borderColor: "#444",
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
-    paddingVertical: 4,
-    paddingHorizontal: 0,
     backgroundColor: "#1f89c2",
+    flexWrap: "wrap",
+    alignSelf: "center",
+    justifyContent: "space-evenly",
+    paddingVertical: Values.maxH / 300,
   },
   characterBoxContainer: {
     shadowColor: "#444",
@@ -39,19 +42,19 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 3 },
   },
   characterBox: {
-    width: 139,
-    height: 137,
+    width: Values.maxW / 2.68,
+    height: Values.maxH / 6.1,
     borderColor: "#fff",
     borderWidth: 0.5,
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: Values.maxH / 160,
+    marginBottom: Values.maxH / 160,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#22a1e6",
   },
   character: {
-    width: 100,
-    height: 100,
+    width: Values.maxW / 4.8,
+    height: Values.maxH / 8.8,
   },
   characterName: {
     color: "#222",
@@ -64,8 +67,8 @@ const styles = StyleSheet.create({
   },
   lock: {
     position: "absolute",
-    height: 62,
-    width: 53,
+    width: Values.maxW / 6,
+    height: Values.maxH / 12,
   },
   closedLock: {
     position: "absolute",
@@ -74,18 +77,19 @@ const styles = StyleSheet.create({
   },
   keyInfoContainer: {
     position: "relative",
-    width: 310,
-    height: 100,
+    width: Values.maxW / 1.21,
+    height: Values.maxH / 9.3,
     borderWidth: 2,
     borderColor: "#444",
     marginTop: 10,
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "space-around",
     backgroundColor: "#1f89c2",
   },
   keyBox: {
-    width: 288,
-    height: 80,
+    width: Values.maxW / 1.298,
+    height: Values.maxH / 12,
     borderWidth: 0.5,
     borderColor: "#fff",
     flexDirection: "row",
@@ -101,16 +105,17 @@ const styles = StyleSheet.create({
   },
   keyContainerText: {
     color: "#222",
-    paddingVertical: 23,
-    marginLeft: 5,
-    fontSize: 25,
+    letterSpacing: 0.1,
+    paddingVertical: Values.maxH / 50,
+    marginLeft: Values.maxH / 130,
+    fontSize: Values.maxH / 35,
   },
   key: {
     position: "relative",
-    width: 65,
-    height: 29,
-    marginTop: 20,
-    paddingVertical: 21,
+    width: Values.maxW / 7.5,
+    height: Values.maxH / 50,
+    marginTop: Values.maxH / 50,
+    paddingVertical: Values.maxH / 50,
   },
 });
 

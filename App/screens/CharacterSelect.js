@@ -194,7 +194,7 @@ class CharacterSelect extends Component {
                   source={Images.key}
                   resizeMode="contain"
                 />
-                <Text style={styles.keyContainerText}>x{this.state.keys}</Text>
+                <Text style={styles.keyContainerText}>x {this.state.keys}</Text>
               </View>
             </ShadowView>
           </View>

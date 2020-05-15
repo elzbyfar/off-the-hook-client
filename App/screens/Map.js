@@ -148,7 +148,7 @@ export default class Map extends Component {
                 <Image
                   style={styles.levelImage}
                   source={image}
-                  resizeMode="contain"
+                  resizeMode="cover"
                 />
                 <View style={styles.levelRequirementsContainer}>
                   <View style={styles.levelRequirements}>
