@@ -25,7 +25,7 @@
 
 <h3>Clone & Contribute</h3>
 <p>
-  ### NOTE - This project has only been tested on MAC. 
+  <h5> NOTE: This project has only been tested on MAC.</h5> 
   Before you begin, be sure to install the latest version of: 
   <ul>
     <li>expo</li>
