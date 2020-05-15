@@ -53,9 +53,8 @@
   <li>Push to the original branch: git push origin [project_name]/[location]</li>
   <li>Create the pull request.</li>
 </ol>
-Alternatively see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
-
 </p>
+Alternatively see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
 
 <h3>Contact</h3>
 
