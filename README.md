@@ -23,7 +23,7 @@
   />
 </p>
 
-<h3>Clone & Contribute</h3>
+<h3>Prerequisites</h3>
 <p>
   <h5> NOTE: This project has only been tested on MAC.</h5> 
   Before you begin, be sure to install the latest version of: 
@@ -39,5 +39,24 @@
     <li>Rails</li>
     <li>PostgreSQL</li>
   </ul>
+</p>
+
+<h3>Contributing To "Off The Hook"</h3>
+
+<p>
+  To contribute to Off The Hook, follow these steps:
+
+  <ol>
+  <li>Fork this repository.</li>
+  <li>Create a branch: git checkout -b [branch_name].</li>
+  <li>Make your changes and commit them: git commit -m '[commit_message]'</li>
+  <li>Push to the original branch: git push origin [project_name]/[location]</li>
+  <li>Create the pull request.</li>
+</ol>
+Alternatively see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
 
 </p>
+
+<h3>Contact</h3>
+
+<h3>License(s)</h3>
