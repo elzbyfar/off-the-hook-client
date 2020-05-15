@@ -1,6 +1,6 @@
 <h1 align="center">OFF THE HOOK</h1>
 <h3>Description & Game Premise</h3>
-<p>
+<p align="center">
   This is an iOS compatible side-scrolling, 2D, aquatic-themed, multi-level game
   that allows single-handed gameplay. The object of the game is for a user to
   move their character across dangerous waters collecting Pellets in a given
@@ -25,6 +25,7 @@
 
 <h3>Clone & Contribute</h3>
 <p>
+  ### NOTE - This project has only been tested on MAC. 
   Before you begin, be sure to install the latest version of: 
   <ul>
     <li>expo</li>
