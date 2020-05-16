@@ -30,6 +30,10 @@
     src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/sign-up.gif"
     width="30%"
   />
+  <img
+    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
+    width="30%"
+  />
 </p>
 
 <h2>Prerequisites</h2>
