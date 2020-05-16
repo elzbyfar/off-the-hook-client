@@ -43,13 +43,13 @@ Create a new account or sign-in. Select a character. Choose the level you would 
     width="30%"
   /> 
   <img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/sign-up.gif"
-    width="30%"
-  /> 
-  <img
     src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
     width="30%"
   />
+  <img
+    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/level-one.gif"
+    width="30%"
+  /> 
 </div>
 
 ## Contributing To "Off The Hook"
