@@ -41,9 +41,9 @@ Create a new account or sign-in. Select a character. Choose the level you would 
   <table>
     <tbody>
       <tr>
-          <th align="center" height="15"><p>HOMESCREEN</p></th>
-          <th align="center" height="15"><p>MENUS</p></th>
-          <th align="center" height="15"><p>GAMEPLAY</p></th>
+          <th align="center" height="15"><h3>HOMESCREEN</h3></th>
+          <th align="center" height="15"><h3>MENUS</h3></th>
+          <th align="center" height="15"><h3>GAMEPLAY</h3></th>
       </tr>
       <tr>
         <td align="center">
