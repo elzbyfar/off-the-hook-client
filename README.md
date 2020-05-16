@@ -28,7 +28,7 @@
 To see a video demonstration of the game, click here:
 <p align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=9i7zOe8aDm8
-" target="_blank"><img src="http://img.youtube.com/vi/9i7zOe8aDm8/0.jpg" 
+" target="_blank"><img src="http://img.youtube.com/vi/9i7zOe8aDm8/1.jpg" 
 alt="Off The Hook Video Demo" width="240" height="180" border="10" /></a>
 </p>
 </p>
