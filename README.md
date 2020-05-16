@@ -24,8 +24,8 @@
 </p>
 <p>
 <h2>Start Game</h2>
-Create a new account or sign-in. Select a character. Choose the level you would like to play. 
-<br>
+<p>Create a new account or sign-in. Select a character. Choose the level you would like to play. </p>
+
 <div align="center">
 
 <img
@@ -79,7 +79,7 @@ Alternatively see the GitHub documentation on <a href="https://help.github.com/e
 </p>
 
 <h2>Contact</h2>
-Reach out and let's chat! 
+<p>Reach out and let's chat! </p>
 <ul>
 <li><a href=''>Portfolio</a></li>
 <li><a href='https://www.linkedin.com/in/alejoluis/'>LinkedIn</a></li>
