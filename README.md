@@ -1,61 +1,50 @@
 <h1 align="center">OFF THE HOOK</h1>
-<h2>Description & Game Premise</h2>
-<p>
-  This is an iOS compatible side-scrolling, 2D, aquatic-themed, multi-level game
-  that allows single-handed gameplay. The object of the game is for a user to
-  move their character across dangerous waters collecting Pellets in a given
-  amount of time while avoiding other creatures and hooks. This game was inspired by FlappyBird but has an underwater twist.
-</p>
-<h2>Live Demo Instructions</h2>
-<p>Try out the game for yourself:</p>
-<p>
-  <h4>iPhone 7 or greater</h4>
-  <ol>
-    <li>Install the <a href='https://itunes.apple.com/app/apple-store/id982107779' alt='Expo Client App Store Link'>Expo Client</a> app on your iPhone.</li>
-    <li>Navigate to <a href="https://snack.expo.io/@elzbyfar/off-the-hook">this link</a> on your iPhone's.</li>
-    <li>Click “Open with Expo”</li>
-  </ol>
-  <h4>Web Browser (Mac/Windows)</h4>
-  <ol>
-    <li>Navigate to <a href="https://snack.expo.io/@elzbyfar/off-the-hook">this link</a>.</li>
-    <li>Near the upper-right hand corner select the iOS tab to launch the built-in demo.</li>
-    <li>Alternatively you can click 'Run' at the next to the Search bar a the top of the page. This will reveal a QR code you can scan with an iPhone. (You will need to have Expo Client installed on your phone if you choose this option.) </li>
-  </ol>
+
+## Description & Game Premise
+
+This is an iOS compatible side-scrolling, 2D, aquatic-themed, multi-level game
+that allows single-handed game-play. The object of the game is for a user to
+move their character across dangerous waters collecting Pellets in a given
+amount of time while avoiding other creatures and hooks. This game was inspired by FlappyBird but has an underwater twist.
+
+## Live Demo Instructions
+
+To try out the game for yourself follow these instructions:
+
+#### iPhone 7 or greater
+
+- Install the [Expo Client](https://itunes.apple.com/app/apple-store/id982107779) app on your iPhone.
+- Navigate to [this link](https://snack.expo.io/@elzbyfar/off-the-hook)on your iPhone's.
+- Click “Open with Expo”
+
+#### Web Browser (Mac/Windows)
+
+- Navigate to [this link](https://snack.expo.io/@elzbyfar/off-the-hook).
+- Near the upper-right hand corner select the iOS tab to launch the built-in demo.
+- Alternatively you can click 'Run' at the next to the Search bar a the top of the page. This will reveal a QR code you can scan with an iPhone. (You will need to have Expo Client installed on your phone if you choose this option.)
   Once the app gets started you're ready to play!
-</p>
-<h2>Video Demo</h2>
-<p>
-To see a <a href="https://youtu.be/9i7zOe8aDm8">video demonstration</a> of the game, click here.
+
+## Video Demo
+
+To see a [video demonstration](https://youtu.be/9i7zOe8aDm8) of the game, click here.
+
 <p align="center">
 
-</p>
-</p>
-<p>
-<h2>Start Game</h2>
-<p>Create a new account or sign-in. Select a character. Choose the level you would like to play. </p>
+## Start Game
+
+Create a new account or sign-in. Select a character. Choose the level you would like to play.
 
 <div align="center">
 
-<img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
-    width="30%"
-  />
-<img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/sign-up.gif"
-    width="30%"
-  />
-<img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
-    width="30%"
-  />
+![Title Screen](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif)
+![SignUp Screen](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/sign-up.gif)
+![Character Select](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif)
 
 </div>
-</p>
 
-<h2>Contributing To "Off The Hook"</h2>
+## Contributing To "Off The Hook"
 
-<p>
-  To contribute to Off The Hook, follow these steps:
+To contribute to Off The Hook, follow these steps:
 
   <ol>
   <li>Fork this repository.</li>
@@ -66,10 +55,8 @@ To see a <a href="https://youtu.be/9i7zOe8aDm8">video demonstration</a> of the g
 </ol>
 Alternatively see the GitHub documentation on <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request">creating a pull request</a>.
 
-</p>
+## Prerequisites
 
-<h2>Prerequisites</h2>
-<p>
   <h5> NOTE: This project has only been tested on MAC.</h5> 
   Before you begin, be sure to install the latest version of: 
   <ul>
@@ -77,15 +64,19 @@ Alternatively see the GitHub documentation on <a href="https://help.github.com/e
     <li>Rails</li>
     <li>PostgreSQL</li>
   </ul>
-</p>
 
-<h2>Contact</h2>
-<p>Reach out and let's chat! </p>
+## Inspiration
+
+- [Flappy Bird in React Native](https://www.youtube.com/watch?v=qBGnfULn8W4&t=4s)
+- [Navigation React Native](https://www.youtube.com/watch?v=nQVCkqvU1uE&t=428s)
+
+## Contact
+
+Reach out and let's chat!
+
 <ul>
 <li><a href=''>Portfolio</a></li>
 <li><a href='https://www.linkedin.com/in/alejoluis/'>LinkedIn</a></li>
 <li><a href='mailto:loumalejo@gmail.com'>Email</a></li>
 <li><a href='https://twitter.com/elzbyfar'>Twitter</a></li>
 </ul>
-
-<h2>License(s)</h2>
