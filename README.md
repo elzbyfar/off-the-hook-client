@@ -41,22 +41,24 @@ Create a new account or sign-in. Select a character. Choose the level you would 
   <table>
     <tbody>
       <tr>
+          <th><p>HOMESCREEN</p></th>
+          <th><p>MENUS</p></th>
+          <th><p>GAMEPLAY</p></th>
+      </tr>
+      <tr>
         <td align="center" valign="top">
-          <h3>HOMESCREEN</h3>
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
             width="95%"
           /> 
         </td>
         <td align="center" valign="top">
-          <h3>MENUS</h3>
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
             width="95%"
           />
         </td>
         <td align="center" valign="top">
-          <h3>GAMEPLAY </h3>
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/level-one.gif"
             width="95%"
