@@ -38,18 +38,36 @@ To see a [video demonstration](https://youtu.be/9i7zOe8aDm8) of the game, click 
 Create a new account or sign-in. Select a character. Choose the level you would like to play.
 
 <div align="center">
-  <img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
-    width="30%"
-  /> 
-  <img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
-    width="30%"
-  />
-  <img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/level-one.gif"
-    width="30%"
-  /> 
+  <table>
+    <tbody>
+      <tr>
+        <td align="center" valign="top">
+          <img
+            src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
+            width="180"
+          /> 
+          <br>
+          <p>Create An Account or Login</p>
+        </td>
+        <td>
+          <img
+            src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
+            width="180"
+          />
+          <br>
+          <p>Choose a Character. Check out the level objectives.</p>
+        </td>
+        <td>
+          <img
+            src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/level-one.gif"
+            width="180"
+          /> 
+          <br>
+          <p>Travel through each level collecting Pellet Points and Keys. Avoid touching the other creatures and hooks. </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 ## Contributing To "Off The Hook"
