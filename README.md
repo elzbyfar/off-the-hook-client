@@ -23,11 +23,14 @@
   </ol>
   Once the app gets started you're ready to play!
 </p>
-<p>
 <h2>Video Demo</h2>
+<p>
+To see a video demonstration of the game, click here:
+<p align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=9i7zOe8aDm8
 " target="_blank"><img src="http://img.youtube.com/vi/9i7zOe8aDm8/0.jpg" 
 alt="Off The Hook Video Demo" width="240" height="180" border="10" /></a>
+</p>
 </p>
 <p>
 <h2>Start Game</h2>
