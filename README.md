@@ -25,11 +25,9 @@
 </p>
 <h2>Video Demo</h2>
 <p>
-To see a video demonstration of the game, click here:
+To see a <a href="https://youtu.be/9i7zOe8aDm8">video demonstration</a> of the game, click here.
 <p align="center">
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=9i7zOe8aDm8
-" target="_blank"><img src="http://img.youtube.com/vi/9i7zOe8aDm8/0.jpg" 
-alt="Off The Hook Video Demo" width="360" height="270" border="10" /></a>
+
 </p>
 </p>
 <p>
@@ -75,14 +73,7 @@ Alternatively see the GitHub documentation on <a href="https://help.github.com/e
   <h5> NOTE: This project has only been tested on MAC.</h5> 
   Before you begin, be sure to install the latest version of: 
   <ul>
-    <li>expo</li>
-    <li>react-native</li>
-    <li>react-native-game-engine</li>
-    <li>react-native-screens</li>
-    <li>react-navigation-stack</li>
-    <li>react-native-simple-shadow-view</li>
-    <li>react-native-safe-area-context</li>
-    <li>Matter-JS</li>
+    <li>xCode</li>
     <li>Rails</li>
     <li>PostgreSQL</li>
   </ul>
