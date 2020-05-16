@@ -48,7 +48,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
       <tr>
         <td align="center">
           <img
-            src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
+            src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/homescreen.gif"
             width="95%"
           /> 
         </td>
