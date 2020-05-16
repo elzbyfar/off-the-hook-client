@@ -36,9 +36,9 @@ Create a new account or sign-in. Select a character. Choose the level you would 
 
 <div align="center">
 
-![Title Screen](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif)
-![SignUp Screen](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/sign-up.gif)
-![Character Select](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif)
+![Title Screen](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif|width=30%)
+![SignUp Screen](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/sign-up.gif|width=30%)
+![Character Select](https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif|width=30%)
 
 </div>
 
