@@ -49,7 +49,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
           /> 
         </td>
         <td align="center" valign="top">
-          <h3>CHARACTER + LEVEL MENUS</h3>
+          <h3>MENUS</h3>
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
             width="95%"
