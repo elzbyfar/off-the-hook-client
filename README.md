@@ -1,6 +1,6 @@
 <div align="center">
 <img
-    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/off-the-hook-banner2.jpg"
+    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/off-the-hook-banner3.jpg"
     width="100%"
   />
 </div>
