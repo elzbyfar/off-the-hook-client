@@ -78,8 +78,11 @@ Before you begin, be sure to install the latest version of:
 
 ## Inspiration
 
+I do not own the rights to any of the images included in this repository. All images were pulled from standard Google searches and edited with Adobe Photoshop. I sought out inspiration from:
+
 - [Flappy Bird in React Native](https://www.youtube.com/watch?v=qBGnfULn8W4&t=4s)
 - [Navigation React Native](https://www.youtube.com/watch?v=nQVCkqvU1uE&t=428s)
+- Honorary Mentions: Finding Nemo & American Dad
 
 ## Contact
 
