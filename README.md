@@ -44,7 +44,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
         <td align="center" valign="top">
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
-            width="25%"
+            width="60%"
           /> 
           <br>
           <p>Create An Account or Login</p>
@@ -52,7 +52,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
         <td align="center" valign="top">
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
-            width="25%"
+            width="60%"
           />
           <br>
           <p>Choose a Character. Check out the level objectives.</p>
@@ -60,7 +60,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
         <td align="center" valign="top">
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/level-one.gif"
-            width="25%"
+            width="60%"
           /> 
           <br>
           <p>Travel through each level collecting Pellet Points and Keys. Avoid touching the other creatures and hooks. </p>
