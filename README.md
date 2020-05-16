@@ -7,6 +7,7 @@
   amount of time while avoiding other creatures and hooks. This game was inspired by FlappyBird but has an underwater twist.
 </p>
 <h2>Live Demo Instructions</h2>
+<p>Try out the game for yourself:</p>
 <p>
   <h4>iPhone 7 or greater</h4>
   <ol>
@@ -21,6 +22,12 @@
     <li>Alternatively you can click 'Run' at the next to the Search bar a the top of the page. This will reveal a QR code you can scan with an iPhone. (You will need to have Expo Client installed on your phone if you choose this option.) </li>
   </ol>
   Once the app gets started you're ready to play!
+</p>
+<p>
+<h2>Video Demo</h2>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=9i7zOe8aDm8
+" target="_blank"><img src="http://img.youtube.com/vi/9i7zOe8aDm8/0.jpg" 
+alt="Off The Hook Video Demo" width="240" height="180" border="10" /></a>
 </p>
 <p>
 <h2>Start Game</h2>
@@ -44,6 +51,22 @@
 </div>
 </p>
 
+<h2>Contributing To "Off The Hook"</h2>
+
+<p>
+  To contribute to Off The Hook, follow these steps:
+
+  <ol>
+  <li>Fork this repository.</li>
+  <li>Create a branch: git checkout -b [branch_name].</li>
+  <li>Make your changes and commit them: git commit -m '[commit_message]'</li>
+  <li>Push to the original branch: git push origin [project_name]/[location]</li>
+  <li>Create the pull request.</li>
+</ol>
+Alternatively see the GitHub documentation on <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request">creating a pull request</a>.
+
+</p>
+
 <h2>Prerequisites</h2>
 <p>
   <h5> NOTE: This project has only been tested on MAC.</h5> 
@@ -60,22 +83,6 @@
     <li>Rails</li>
     <li>PostgreSQL</li>
   </ul>
-</p>
-
-<h2>Contributing To "Off The Hook"</h2>
-
-<p>
-  To contribute to Off The Hook, follow these steps:
-
-  <ol>
-  <li>Fork this repository.</li>
-  <li>Create a branch: git checkout -b [branch_name].</li>
-  <li>Make your changes and commit them: git commit -m '[commit_message]'</li>
-  <li>Push to the original branch: git push origin [project_name]/[location]</li>
-  <li>Create the pull request.</li>
-</ol>
-Alternatively see the GitHub documentation on <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request">creating a pull request</a>.
-
 </p>
 
 <h2>Contact</h2>
