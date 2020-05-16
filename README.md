@@ -1,4 +1,9 @@
-<h1 align="center">OFF THE HOOK</h1>
+<div align="center">
+<img
+    src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/off-the-hook.png"
+    width="30%"
+  />
+</div>
 
 ## Description & Game Premise
 
