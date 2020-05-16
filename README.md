@@ -25,19 +25,20 @@
 <p>
 <h2>Start Game</h2>
 Create a new account or sign-in. Select a character. Choose the level you would like to play. 
+<br>
 <div align="center">
 
 <img
     src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
-    width="25%"
+    width="30%"
   />
 <img
     src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/sign-up.gif"
-    width="25%"
+    width="30%"
   />
 <img
     src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
-    width="25%"
+    width="30%"
   />
 
 </div>
@@ -78,7 +79,9 @@ Alternatively see the GitHub documentation on <a href="https://help.github.com/e
 </p>
 
 <h2>Contact</h2>
+Reach out and let's chat! 
 <ul>
+<li><a href=''>Portfolio</a></li>
 <li><a href='https://www.linkedin.com/in/alejoluis/'>LinkedIn</a></li>
 <li><a href='mailto:loumalejo@gmail.com'>Email</a></li>
 <li><a href='https://twitter.com/elzbyfar'>Twitter</a></li>
