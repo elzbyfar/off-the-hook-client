@@ -44,26 +44,26 @@ Create a new account or sign-in. Select a character. Choose the level you would 
         <td align="center" valign="top">
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/title-screen.gif"
-            width="60%"
+            width="80%"
           /> 
           <br>
-          <p>SIGN IN | SIGN UP</p>
+          <h4>HOMESCREEN</h4>
         </td>
         <td align="center" valign="top">
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/character-level-select.gif"
-            width="60%"
+            width="80%"
           />
           <br>
-          <p>CHARACTER | LEVEL SELECTIONS</p>
+          <h4>CHARACTER | LEVEL SELECTIONS</h4>
         </td>
         <td align="center" valign="top">
           <img
             src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/level-one.gif"
-            width="60%"
+            width="80%"
           /> 
           <br>
-          <p>GAMEPLAY </p>
+          <h4>GAMEPLAY </h4>
         </td>
       </tr>
     </tbody>
