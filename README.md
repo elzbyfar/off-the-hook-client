@@ -1,7 +1,7 @@
 <div align="center">
 <img
     src="https://github.com/elzbyfar/off-the-hook-client-side-update/blob/master/App/assets/img/off-the-hook-banner.png"
-    width="30%"
+    width="80%"
   />
 </div>
 
