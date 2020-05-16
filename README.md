@@ -47,7 +47,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
             width="60%"
           /> 
           <br>
-          <p>Create An Account or Login</p>
+          <p>SIGN IN | SIGN UP</p>
         </td>
         <td align="center" valign="top">
           <img
@@ -55,7 +55,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
             width="60%"
           />
           <br>
-          <p>Choose a Character. Check out the level objectives.</p>
+          <p>CHARACTER | LEVEL SELECTIONS</p>
         </td>
         <td align="center" valign="top">
           <img
@@ -63,7 +63,7 @@ Create a new account or sign-in. Select a character. Choose the level you would 
             width="60%"
           /> 
           <br>
-          <p>Travel through each level collecting Pellet Points and Keys. Avoid touching the other creatures and hooks. </p>
+          <p>GAMEPLAY </p>
         </td>
       </tr>
     </tbody>
