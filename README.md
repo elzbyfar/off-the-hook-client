@@ -59,9 +59,9 @@ Create a new account or sign-in. Select a character. Choose the level you would 
 To contribute to Off The Hook, follow these steps:
 
 - Fork this repository.
-- Create a branch: git checkout -b [branch_name].
-- Make your changes and commit them: git commit -m '[commit_message]'
-- Push to the original branch: git push origin [project_name]/[location]
+- Create a branch: `git checkout -b <branch_name>`
+- Make your changes and commit them: `git commit -m '[commit_message]'`
+- Push to the original branch: `git push origin [project_name]/[location]`
 - Create the pull request.
 
 Alternatively see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
