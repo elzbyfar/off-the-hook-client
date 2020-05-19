@@ -5,7 +5,7 @@
   />
 </div>
 
-## Description & Game Premise
+## Description
 
 This is an iOS compatible side-scrolling, 2D, aquatic-themed, multi-level game
 that allows single-handed game-play. The object of the game is for a user to
@@ -19,7 +19,7 @@ To try out the game for yourself follow these instructions:
 #### iPhone 7 or greater
 
 - Install the [Expo Client](https://itunes.apple.com/app/apple-store/id982107779) app on your iPhone.
-- Navigate to [this link](https://snack.expo.io/@elzbyfar/off-the-hook)on your iPhone's.
+- Navigate to [this link](https://snack.expo.io/@elzbyfar/off-the-hook) on your iPhone's.
 - Click “Open with Expo”
 
 #### Web Browser (Mac/Windows)
@@ -87,7 +87,7 @@ Alternatively see the GitHub documentation on [creating a pull request](https://
 
 Before you begin, be sure to have the following installed:
 
-- [Back End Repo](https://github.com/elzbyfar/off-the-hook-server-side)
+- [Back End Repository](https://github.com/elzbyfar/off-the-hook-server-side)
 - xCode 11.4.1
 - Ruby 2.6.1
 - Rails 6.0.2.2
