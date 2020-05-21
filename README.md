@@ -31,7 +31,7 @@ To try out the game for yourself follow these instructions:
 
 ## Video Demo
 
-To see a [video demonstration](https://youtu.be/9i7zOe8aDm8) of the game, click here.
+Learn how the game works by watching this [video demonstration](https://youtu.be/9i7zOe8aDm8).
 
 ## Start Game
 
