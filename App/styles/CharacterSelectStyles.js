@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { Value } from "react-native-reanimated";
 import Values from "../helpers/Values";
 
 const styles = StyleSheet.create({

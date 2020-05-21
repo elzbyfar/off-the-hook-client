@@ -1,14 +1,10 @@
 import { Dimensions } from "react-native";
 
-// const characterSelectContainer = Values.maxH - Values.maxH / 3;
-
 Values = {
   API_BASE: "https://lit-depths-27271.herokuapp.com/api/v1",
 
   maxW: Dimensions.get("window").width,
   maxH: Dimensions.get("window").height,
-
-  // characterSelectContainer: characterSelectContainer,
 
   floorWidth: 512,
   floorHeight: 200,
