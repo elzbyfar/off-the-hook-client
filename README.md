@@ -16,7 +16,7 @@ amount of time while avoiding other creatures and hooks. This game was inspired 
 
 To try out the game for yourself follow these instructions:
 
-#### iPhone 7 or greater
+#### iPhone 8 or greater
 
 - Install the [Expo Client](https://itunes.apple.com/app/apple-store/id982107779) app on your iPhone.
 - Navigate to [this link](https://snack.expo.io/@elzbyfar/off-the-hook) on your iPhone's.
